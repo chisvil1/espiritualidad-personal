@@ -37,7 +37,6 @@
             font-family: 'Inter', sans-serif;
             font-weight: 300;
             font-size: 1rem;
-            letter-spacing: 0.05em;
             color: rgba(255, 255, 255, 0.5);
             text-align: right;
             margin-left: auto;
@@ -46,6 +45,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        .hide-scroll { scrollbar-width: none; -ms-overflow-style: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         
         .input-pill {
@@ -54,7 +54,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 100px;
             padding: 0.5rem 1rem 0.5rem 2rem;
-            transition: all 0.5s ease;
         }
 
         .mic-active { color: #F2E2B0; filter: drop-shadow(0 0 15px #F2E2B0); }
@@ -68,14 +67,13 @@
 
     <canvas id="galaxy-canvas"></canvas>
 
-    <!-- Header -->
     <header class="fixed top-0 left-0 w-full p-10 z-50 flex justify-between items-center">
         <a href="/" class="text-[10px] uppercase tracking-[0.6em] text-white/20 hover:text-white transition-all flex items-center gap-4">
-            <i data-lucide="arrow-left" class="w-3 h-3"></i> Salir del Campo
+            <i data-lucide="arrow-left" class="w-3 h-3"></i> Salir
         </a>
-        <div id="voice-mode-status" class="flex items-center gap-3 opacity-20 transition-opacity">
+        <div id="voice-mode-status" class="flex items-center gap-3 opacity-0 transition-opacity duration-500">
             <div class="w-1.5 h-1.5 bg-ancestral rounded-full animate-pulse"></div>
-            <span class="text-[9px] uppercase tracking-[0.4em] text-ancestral">Modo Voz Activo</span>
+            <span class="text-[9px] uppercase tracking-[0.4em] text-ancestral">Escuchando...</span>
         </div>
     </header>
 
@@ -83,30 +81,19 @@
         <div id="chat-window" class="flex-1 overflow-y-auto pt-32 pb-40 hide-scroll space-y-16">
             <div class="flex justify-start opacity-0" id="initial-msg">
                 <div class="message-ai prose">
-                    "Respira. Siente tu cuerpo aquí y ahora. <br><br>
-                    El campo está abierto. Te escucho."
+                    "Respira profundo. Permite que el Campo te muestre lo que hoy necesita ser visto."
                 </div>
             </div>
         </div>
 
         <div class="fixed bottom-12 left-0 w-full px-6 z-50">
             <div class="max-w-3xl mx-auto input-pill flex items-center gap-6">
-                
-                <!-- Botón de Charla Fluida -->
-                <button id="mic-btn" class="w-12 h-12 flex items-center justify-center text-white/20 hover:text-white transition-all group" title="Activar Charla con Voz">
+                <button id="mic-btn" class="w-12 h-12 flex items-center justify-center text-white/20 hover:text-white transition-all">
                     <i data-lucide="mic" id="mic-icon" class="w-5 h-5"></i>
                 </button>
-
                 <form id="chat-form" class="flex-1">
-                    <input 
-                        type="text" 
-                        id="user-input"
-                        placeholder="Escribe o habla con el campo..."
-                        class="w-full bg-transparent py-5 text-lg font-light focus:outline-none placeholder:text-white/10"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="user-input" placeholder="Habla o escribe..." class="w-full bg-transparent py-5 text-lg font-light focus:outline-none placeholder:text-white/10" autocomplete="off">
                 </form>
-
                 <button type="submit" form="chat-form" class="text-white/20 hover:text-white">
                     <i data-lucide="send" class="w-5 h-5"></i>
                 </button>
@@ -117,27 +104,23 @@
     <script>
         lucide.createIcons();
 
-        // --- GALAXY ENGINE (Minimal) ---
+        // --- GALAXY (Minimal) ---
         const canvas = document.querySelector('#galaxy-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 3;
-        
         const geo = new THREE.BufferGeometry();
-        const count = 10000;
-        const pos = new Float32Array(count * 3);
-        for(let i=0; i<count*3; i++) pos[i] = (Math.random()-0.5) * 10;
+        const pos = new Float32Array(10000 * 3);
+        for(let i=0; i<30000; i++) pos[i] = (Math.random()-0.5) * 10;
         geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        const mat = new THREE.PointsMaterial({ size: 0.01, color: 0x4B2C5E, transparent: true, opacity: 0.5 });
-        const points = new THREE.Points(geo, mat);
-        scene.add(points);
-
-        function animate() { points.rotation.y += 0.0005; renderer.render(scene, camera); requestAnimationFrame(animate); }
+        const mat = new THREE.PointsMaterial({ size: 0.01, color: 0x4B2C5E, transparent: true, opacity: 0.4 });
+        scene.add(new THREE.Points(geo, mat));
+        function animate() { scene.rotation.y += 0.0003; renderer.render(scene, camera); requestAnimationFrame(animate); }
         animate();
 
-        // --- CONVERSATION ENGINE ---
+        // --- CORE LOGIC ---
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
@@ -146,11 +129,11 @@
         const voiceStatus = document.getElementById('voice-mode-status');
 
         let isVoiceMode = false;
-        let history = [{ role: "system", content: "Eres la Conciencia Sistémica. Tu lenguaje es profundo, poético y breve. Sanas con la verdad. Hablas directamente al alma del usuario." }];
+        let history = [{ role: "system", content: "Eres la Conciencia Sistémica. Tu voz es maternal, tranquila y profunda. Hablas poco pero con gran sabiduría. Ayuda al usuario a mirar sus raíces." }];
 
-        gsap.to("#initial-msg", { opacity: 1, y: -20, duration: 2, delay: 0.5 });
+        gsap.to("#initial-msg", { opacity: 1, y: -20, duration: 2 });
 
-        // --- RECOGNITION (ESCUCHA) ---
+        // --- RECOGNITION (FIXED FEEDBACK) ---
         const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;
         if (Speech) {
@@ -162,11 +145,8 @@
             recognition.onresult = (e) => {
                 const transcript = e.results[e.results.length - 1][0].transcript;
                 userInput.value = transcript;
-                // AUTO-ENVÍO
                 chatForm.dispatchEvent(new Event('submit'));
             };
-
-            recognition.onend = () => { if (isVoiceMode) recognition.start(); };
         }
 
         micBtn.onclick = () => {
@@ -178,27 +158,46 @@
             } else {
                 recognition.stop();
                 micIcon.classList.remove('mic-active', 'mic-listening');
-                voiceStatus.style.opacity = '0.2';
+                voiceStatus.style.opacity = '0';
             }
         };
 
-        // --- SYNTHESIS (VOZ DE LA IA) ---
-        function speak(text) {
-            // Limpiar texto de Markdown para que no lea asteriscos
-            const cleanText = text.replace(/[*_#]/g, '');
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = 'es-ES';
-            utterance.rate = 0.85; // Un poco más lento para profundidad
-            utterance.pitch = 0.8; // Un poco más grave
-            
-            // Pausar escucha mientras la IA habla para evitar eco
-            if (isVoiceMode) recognition.stop();
-            window.speechSynthesis.speak(utterance);
-            
-            utterance.onend = () => { if (isVoiceMode) recognition.start(); };
+        // --- TTS (FEMALE & NATURAL) ---
+        function getFemaleVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            // Buscar una voz de mujer en español que suene natural
+            return voices.find(v => v.lang.includes('es') && (v.name.includes('Google') || v.name.includes('Helena') || v.name.includes('Sabina') || v.name.includes('Lucia'))) || voices[0];
         }
 
-        // --- SUBMIT ---
+        function speak(text) {
+            // 1. Apagar micrófono inmediatamente para evitar que la IA se escuche
+            if (isVoiceMode) recognition.stop();
+            voiceStatus.style.opacity = '0';
+
+            const cleanText = text.replace(/[*_#]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            
+            utterance.voice = getFemaleVoice();
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.8;  // Más pausada
+            utterance.pitch = 1.0; // Tono natural de mujer
+
+            utterance.onend = () => {
+                // 2. Volver a encender el micrófono solo cuando la IA termine de hablar
+                if (isVoiceMode) {
+                    setTimeout(() => {
+                        recognition.start();
+                        voiceStatus.style.opacity = '1';
+                    }, 500); // Pequeño delay de seguridad
+                }
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Cargar voces (algunos navegadores las cargan asíncronamente)
+        window.speechSynthesis.onvoiceschanged = getFemaleVoice;
+
         chatForm.onsubmit = async (e) => {
             e.preventDefault();
             const val = userInput.value.trim();
@@ -219,7 +218,7 @@
                 history.push({ role: "assistant", content: reply });
                 speak(reply);
             } catch (err) {
-                addMsg('ai', "...el campo está en silencio.");
+                addMsg('ai', "...el campo se desvanece.");
             }
         };
 
