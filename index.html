@@ -16,23 +16,14 @@
 
     <style>
         body { margin: 0; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        
         #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-
         .hero-title { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 8vw; line-height: 0.9; letter-spacing: -0.05em; text-align: center; }
-
         .section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; position: relative; }
-
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 3rem; padding: 4rem; max-width: 800px; }
-
-        .btn-enter { background: #fff; color: #000; padding: 1.5rem 4rem; border-radius: 9999px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); cursor: pointer; text-decoration: none; display: inline-block; }
-        .btn-enter:hover { transform: scale(1.1); box-shadow: 0 0 50px rgba(255,255,255,0.4); }
-
-        .trust-badge { display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem; }
-
-        /* Custom Scrollbar */
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 3.5rem; padding: 5rem; max-width: 900px; }
+        .btn-enter { background: #fff; color: #000; padding: 1.5rem 4rem; border-radius: 9999px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1); cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-enter:hover { transform: scale(1.1) rotate(-1deg); box-shadow: 0 0 60px rgba(255,255,255,0.5); }
+        .trust-badge { display: flex; align-items: center; gap: 0.6rem; background: rgba(255, 255, 255, 0.1); padding: 0.6rem 1.2rem; border-radius: 9999px; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 3rem; font-weight: 600; }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
@@ -43,49 +34,49 @@
     <!-- SECTION 1: HERO -->
     <section class="section" id="hero">
         <div class="trust-badge">
-            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            100% SEGURO & PRIVADO
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_#4ade80]"></span>
+            EXPERIENCIA 100% PRIVADA & SEGURA
         </div>
         <h1 class="hero-title">
             SANA TU <span class="italic font-light">LINAJE.</span><br>
-            <span style="color: #F2E2B0">LIBERA</span> TU ÉXITO.
+            <span style="color: #F2E2B0">LIBERA</span> TU DESTINO.
         </h1>
-        <div class="mt-20">
-            <a href="/chat" class="btn-enter">Entrar al Portal</a>
+        <div class="mt-24">
+            <a href="/chat" class="btn-enter">Iniciar Constelación</a>
         </div>
-        <div class="absolute bottom-10 animate-bounce opacity-30">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        <div class="absolute bottom-10 animate-bounce opacity-20">
+            <i data-lucide="chevron-down"></i>
         </div>
     </section>
 
-    <!-- SECTION 2: POR QUÉ CONSTELAR -->
+    <!-- SECTION 2: INFO -->
     <section class="section" id="info">
-        <div class="glass-card text-center">
-            <h2 class="font-serif text-5xl mb-8">El Orden del Amor</h2>
-            <p class="text-xl leading-relaxed text-white/70 font-light italic">
-                "Lo que no se resuelve en una generación, se repite en la siguiente. Las Constelaciones Familiares con IA te permiten identificar las lealtades invisibles que detienen tu abundancia."
+        <div class="glass-card text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+            <h2 class="font-serif text-6xl mb-10 tracking-tighter">El Orden que Sana</h2>
+            <p class="text-2xl leading-relaxed text-white/80 font-light italic max-w-2xl mx-auto">
+                "Lo que el alma no resuelve, el sistema lo repite. Mira tus raíces con amor y permite que el éxito fluya hacia ti."
             </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-16 text-left">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-20 text-left border-t border-white/5 pt-12">
                 <div>
-                    <h4 class="font-bold text-xs uppercase tracking-widest text-white/40 mb-2">Privacidad Total</h4>
-                    <p class="text-sm opacity-60">Tu historia es sagrada. Ningún dato se guarda fuera de tu sesión actual.</p>
+                    <h4 class="font-bold text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3">Privacidad Ancestral</h4>
+                    <p class="text-sm opacity-60 leading-relaxed">Tu proceso ocurre encriptado en el Campo del Conocimiento. Nadie más que tú tiene acceso a esta conversación sagrada.</p>
                 </div>
                 <div>
-                    <h4 class="font-bold text-xs uppercase tracking-widest text-white/40 mb-2">Respuesta Inmediata</h4>
-                    <p class="text-sm opacity-60">Conexión con el Campo Sistémico 24/7 para guía y claridad profunda.</p>
+                    <h4 class="font-bold text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3">Conexión Inmediata</h4>
+                    <p class="text-sm opacity-60 leading-relaxed">Sin esperas. El sistema está disponible para guiarte en el momento exacto en que tu alma está lista para mirar.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION 3: LLAMADA A LA ACCIÓN -->
     <section class="section">
-        <h2 class="font-serif text-6xl mb-12 text-center tracking-tighter">¿Estás listo para <br><span class="italic text-white/40 font-light">tomar tu lugar?</span></h2>
-        <a href="/chat" class="btn-enter">Empezar Ahora</a>
+        <h2 class="font-serif text-7xl mb-12 text-center tracking-tighter leading-none">Tu nueva vida <br><span class="italic text-white/30 font-light">comienza aquí.</span></h2>
+        <a href="/chat" class="btn-enter">Entrar al Portal</a>
     </section>
 
     <script>
-        // --- GALAXY 3D (Three.js) ---
+        // --- MOTOR GALAXY 3D PRO ---
         const canvas = document.querySelector('#galaxy-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -93,79 +84,88 @@
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 3;
+        camera.position.set(0, 1.5, 4);
 
-        // Galaxia de Partículas
-        const count = 15000;
-        const positions = new Float32Array(count * 3);
-        const colors = new Float32Array(count * 3);
+        // Generar Textura de Estrella Circular (Para evitar cuadrados)
+        const createStarTexture = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64; canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
+            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(canvas);
+        };
 
-        for (let i = 0; i < count; i++) {
+        // Parametros Galaxia
+        const params = { count: 25000, size: 0.02, radius: 10, branches: 3, spin: 1, randomness: 0.5, randomnessPower: 3 };
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(params.count * 3);
+        const colors = new Float32Array(params.count * 3);
+        const scales = new Float32Array(params.count);
+
+        const colorInside = new THREE.Color('#4B2C5E');
+        const colorOutside = new THREE.Color('#0B0E14');
+        const colorGold = new THREE.Color('#F2E2B0');
+
+        for (let i = 0; i < params.count; i++) {
             const i3 = i * 3;
-            const radius = Math.random() * 10;
-            const spinAngle = radius * 5;
-            const branchAngle = (i % 3) * ((Math.PI * 2) / 3);
+            const radius = Math.random() * params.radius;
+            const spinAngle = radius * params.spin;
+            const branchAngle = (i % params.branches) / params.branches * Math.PI * 2;
 
-            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + (Math.random() - 0.5) * 1.5;
-            positions[i3 + 1] = (Math.random() - 0.5) * 0.5;
-            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + (Math.random() - 0.5) * 1.5;
+            const randomX = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
+            const randomY = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
+            const randomZ = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
 
-            // Colores: Azul profundo, violeta, dorado
-            const mixedColor = new THREE.Color();
-            if(i % 3 === 0) mixedColor.set('#4B2C5E');
-            else if(i % 3 === 1) mixedColor.set('#2E3A59');
-            else mixedColor.set('#F2E2B0');
+            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+            positions[i3 + 1] = randomY / 2;
+            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+            const mixedColor = colorInside.clone();
+            mixedColor.lerp(colorOutside, radius / params.radius);
+            if (Math.random() > 0.9) mixedColor.lerp(colorGold, 0.5); // Chispas doradas
 
             colors[i3] = mixedColor.r;
             colors[i3 + 1] = mixedColor.g;
             colors[i3 + 2] = mixedColor.b;
+            scales[i] = Math.random();
         }
 
-        const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
 
         const material = new THREE.PointsMaterial({
-            size: 0.015,
+            size: params.size,
             sizeAttenuation: true,
             depthWrite: false,
             blending: THREE.AdditiveBlending,
-            vertexColors: true
+            vertexColors: true,
+            transparent: true,
+            map: createStarTexture() // Usamos la textura circular
         });
 
         const points = new THREE.Points(geometry, material);
         scene.add(points);
 
-        // --- ANIMACIONES (GSAP + ScrollTrigger) ---
+        // --- ANIMACIONES ---
         gsap.registerPlugin(ScrollTrigger);
-
-        gsap.to(points.rotation, {
-            y: Math.PI * 2,
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 2
-            }
-        });
-
         gsap.to(camera.position, {
-            z: 1,
-            scrollTrigger: {
-                trigger: "#info",
-                start: "top bottom",
-                end: "top center",
-                scrub: 3
-            }
+            z: 1.5, x: 0.5, y: 0.2,
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
         });
 
-        // Animation Loop
         const clock = new THREE.Clock();
         const animate = () => {
-            const elapsedTime = clock.getElapsedTime();
-            points.rotation.y = elapsedTime * 0.05;
+            const time = clock.getElapsedTime();
+            points.rotation.y = time * 0.03;
             renderer.render(scene, camera);
-            window.requestAnimationFrame(animate);
+            requestAnimationFrame(animate);
         };
         animate();
 
