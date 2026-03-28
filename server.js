@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); // Servir archivos estáticos (index.html, etc.)
+
+// Servir archivos estáticos explícitamente desde la raíz
+app.use(express.static(path.join(__dirname, '/')));
 
 // Endpoint para el chat
 app.post('/api/chat', async (req, res) => {
@@ -17,6 +19,7 @@ app.post('/api/chat', async (req, res) => {
     const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
     if (!GROQ_API_KEY) {
+      console.error("GROQ_API_KEY no encontrada");
       return res.status(500).json({ error: "API Key no configurada en Render" });
     }
 
@@ -38,12 +41,12 @@ app.post('/api/chat', async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error en el servidor:", error);
     res.status(500).json({ error: "Error conectando con Groq" });
   }
 });
 
-// Ruta para cualquier otra cosa -> index.html
+// Ruta principal para servir index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
