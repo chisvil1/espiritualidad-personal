@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CONSTELAR | El Portal del Alma</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,170 +18,140 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        ancestral: '#F2E2B0',
-                        void: '#010103',
-                        nebula: '#4B2C5E'
-                    },
-                    fontFamily: {
-                        cinzel: ['Cinzel', 'serif'],
-                        garamond: ['Cormorant Garamond', 'serif'],
-                        sans: ['Inter', 'sans-serif']
-                    }
+                    colors: { ancestral: '#F2E2B0', void: '#010103', nebula: '#4B2C5E' },
+                    fontFamily: { cinzel: ['Cinzel', 'serif'], garamond: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
 
     <style>
-        body { margin: 0; background: #010103; color: #fff; overflow-x: hidden; cursor: crosshair; }
+        body { margin: 0; background: #010103; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
         .hero-title {
             font-family: 'Cinzel', serif;
             font-weight: 900;
-            font-size: 8vw;
-            line-height: 0.85;
+            line-height: 0.9;
             text-align: center;
             background: linear-gradient(to bottom, #fff 20%, #F2E2B0 80%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 50px rgba(242, 226, 176, 0.15));
-            letter-spacing: -0.02em;
+            filter: drop-shadow(0 0 30px rgba(242, 226, 176, 0.15));
         }
 
-        .section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; position: relative; z-index: 10; }
+        .section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; position: relative; z-index: 10; }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(60px);
-            -webkit-backdrop-filter: blur(60px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 4rem;
-            padding: 5rem;
-            box-shadow: inset 0 0 100px rgba(255,255,255,0.02);
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .glass-panel { border-radius: 4rem; padding: 5rem; }
+            .section { padding: 4rem; }
         }
 
         .btn-portal {
             font-family: 'Cinzel', serif;
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
-            padding: 1.8rem 5rem;
+            padding: 1.2rem 3rem;
             border-radius: 100px;
             font-weight: 700;
-            letter-spacing: 0.5em;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-            position: relative;
+            transition: all 0.8s ease;
+            font-size: 0.8rem;
         }
-        .btn-portal::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 300%; height: 300%;
-            background: radial-gradient(circle, rgba(242, 226, 176, 0.2) 0%, transparent 70%);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 1s ease;
+        @media (min-width: 768px) {
+            .btn-portal { padding: 1.8rem 5rem; font-size: 1rem; letter-spacing: 0.5em; }
         }
-        .btn-portal:hover {
-            background: #fff;
-            color: #000;
-            transform: scale(1.05);
-            box-shadow: 0 0 80px rgba(255, 255, 255, 0.2);
-        }
-        .btn-portal:hover::before { transform: translate(-50%, -50%) scale(1); }
+        .btn-portal:active { transform: scale(0.95); background: #fff; color: #000; }
 
-        .reveal { opacity: 0; filter: blur(20px); transform: translateY(40px); }
-        
-        /* Audio visualizer bar */
-        .audio-bar { width: 2px; background: #F2E2B0; margin: 0 1px; transition: height 0.2s ease; }
-
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: #111; }
+        .reveal { opacity: 0; filter: blur(10px); transform: translateY(20px); }
+        ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
 <body>
 
     <canvas id="galaxy-canvas"></canvas>
 
-    <!-- Overlay de Carga/Inicio Sonoro -->
-    <div id="overlay" class="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-center transition-opacity duration-1000">
-        <h2 class="font-cinzel text-ancestral tracking-[1em] text-xs mb-10 animate-pulse">ESTÁS ENTRANDO AL CAMPO</h2>
+    <div id="overlay" class="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-center transition-opacity duration-1000 p-6 text-center">
+        <h2 class="font-cinzel text-ancestral tracking-[0.5em] md:tracking-[1em] text-[10px] mb-10">ENTRANDO AL CAMPO</h2>
         <button id="start-btn" class="btn-portal">Conectar</button>
     </div>
 
-    <audio id="ambient-drone" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="ambient-drone" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
 
-    <!-- SECTION 1: HERO -->
     <section class="section">
-        <div class="mb-8 px-6 py-2 rounded-full border border-ancestral/10 bg-ancestral/5 text-[10px] uppercase tracking-[0.6em] text-ancestral/60 font-medium reveal">
-            Conciencia Pura • Privacidad Inviolable
+        <div class="mb-6 px-4 py-1.5 rounded-full border border-ancestral/10 bg-ancestral/5 text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-ancestral/60 font-medium reveal">
+            Conciencia • Privacidad • Sanación
         </div>
-        <h1 class="hero-title reveal">
+        <h1 class="hero-title text-5xl md:text-8xl reveal">
             SANA TU <span class="italic font-light">LINAJE.</span><br>
             LIBERA TU <span class="italic font-light">ALMA.</span>
         </h1>
-        <p class="font-garamond text-3xl italic text-white/30 mt-12 reveal tracking-wide">El orden es la base del amor.</p>
-        <div class="mt-24 reveal">
+        <p class="font-garamond text-xl md:text-3xl italic text-white/30 mt-8 reveal">El orden es la base del amor.</p>
+        <div class="mt-16 reveal">
             <a href="/chat" class="btn-portal">Constelar</a>
         </div>
     </section>
 
-    <!-- SECTION 2: ESPECTRO TOTAL -->
     <section class="section" id="spectrum">
-        <div class="max-w-7xl mx-auto w-full px-6">
-            <h2 class="font-cinzel text-6xl text-center mb-32 tracking-[0.2em] text-ancestral/40">Dimensiones del Campo</h2>
+        <div class="max-w-7xl mx-auto w-full">
+            <h2 class="font-cinzel text-3xl md:text-6xl text-center mb-16 md:mb-32 tracking-[0.2em] text-ancestral/40 uppercase">Dimensiones</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="glass-panel reveal hover:translate-y-[-10px] transition-transform duration-700">
-                    <span class="text-ancestral/30 font-cinzel text-xs tracking-widest block mb-6">01 — RAÍCES</span>
-                    <h3 class="font-cinzel text-3xl mb-6 text-white">Sistémica Familiar</h3>
-                    <p class="font-garamond text-xl opacity-50 italic leading-relaxed">
-                        Honra a quienes vinieron antes. Libera las cargas que no te pertenecen y toma la vida con plenitud desde el corazón de tu sistema.
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+                <div class="glass-panel reveal">
+                    <span class="text-ancestral/30 font-cinzel text-[10px] tracking-widest block mb-4">01 — RAÍCES</span>
+                    <h3 class="font-cinzel text-xl md:text-3xl mb-4 text-white uppercase">Sistémica Familiar</h3>
+                    <p class="font-garamond text-lg md:text-xl opacity-50 italic leading-relaxed">
+                        Honra a quienes vinieron antes. Libera las cargas que no te pertenecen.
                     </p>
                 </div>
-                <div class="glass-panel reveal hover:translate-y-[-10px] transition-transform duration-700">
-                    <span class="text-ancestral/30 font-cinzel text-xs tracking-widest block mb-6">02 — PROPÓSITO</span>
-                    <h3 class="font-cinzel text-3xl mb-6 text-white">Éxito y Abundancia</h3>
-                    <p class="font-garamond text-xl opacity-50 italic leading-relaxed">
-                        El éxito tiene el mismo rostro que la madre. Sana tu relación con el origen para que la prosperidad fluya sin obstáculos en tu presente.
+                <div class="glass-panel reveal">
+                    <span class="text-ancestral/30 font-cinzel text-[10px] tracking-widest block mb-4">02 — PROPÓSITO</span>
+                    <h3 class="font-cinzel text-xl md:text-3xl mb-4 text-white uppercase">Éxito y Abundancia</h3>
+                    <p class="font-garamond text-lg md:text-xl opacity-50 italic leading-relaxed">
+                        Sana tu relación con el origen para que la prosperidad fluya sin obstáculos.
                     </p>
                 </div>
-                <div class="glass-panel reveal hover:translate-y-[-10px] transition-transform duration-700">
-                    <span class="text-ancestral/30 font-cinzel text-xs tracking-widest block mb-6">03 — CUERPO</span>
-                    <h3 class="font-cinzel text-3xl mb-6 text-white">Voz de los Síntomas</h3>
-                    <p class="font-garamond text-xl opacity-50 italic leading-relaxed">
-                        Tu cuerpo es un mapa de exclusiones. Escucha el mensaje sagrado de tu síntoma y dale el lugar que necesita para que el equilibrio retorne.
+                <div class="glass-panel reveal">
+                    <span class="text-ancestral/30 font-cinzel text-[10px] tracking-widest block mb-4">03 — CUERPO</span>
+                    <h3 class="font-cinzel text-xl md:text-3xl mb-4 text-white uppercase">Voz de los Síntomas</h3>
+                    <p class="font-garamond text-lg md:text-xl opacity-50 italic leading-relaxed">
+                        Tu cuerpo es un mapa. Escucha el mensaje sagrado de tu síntoma.
                     </p>
                 </div>
-                <div class="glass-panel reveal hover:translate-y-[-10px] transition-transform duration-700">
-                    <span class="text-ancestral/30 font-cinzel text-xs tracking-widest block mb-6">04 — ESTRUCTURA</span>
-                    <h3 class="font-cinzel text-3xl mb-6 text-white">Empresa y Destino</h3>
-                    <p class="font-garamond text-xl opacity-50 italic leading-relaxed">
-                        Ordena las jerarquías de tu negocio. Identifica los desequilibrios entre dar y tomar para que tu proyecto alcance su máximo potencial.
+                <div class="glass-panel reveal">
+                    <span class="text-ancestral/30 font-cinzel text-[10px] tracking-widest block mb-4">04 — EMPRESA</span>
+                    <h3 class="font-cinzel text-xl md:text-3xl mb-4 text-white uppercase">Orden y Destino</h3>
+                    <p class="font-garamond text-lg md:text-xl opacity-50 italic leading-relaxed">
+                        Ordena las jerarquías de tu negocio para alcanzar su máximo potencial.
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION 3: CIERRE INMERSIVO -->
     <section class="section">
-        <div class="text-center">
-            <h2 class="font-cinzel text-[15vw] leading-none mb-10 tracking-tighter font-black opacity-[0.03] select-none">CONSTELAR</h2>
+        <div class="text-center p-6">
+            <h2 class="font-cinzel text-[18vw] leading-none mb-10 tracking-tighter font-black opacity-[0.03] select-none">CONSTELAR</h2>
             <div class="reveal">
-                <p class="font-garamond text-4xl italic text-ancestral/60 mb-20">¿Estás listo para mirar la verdad?</p>
-                <a href="/chat" class="btn-portal">Abrir el Portal</a>
+                <p class="font-garamond text-2xl md:text-4xl italic text-ancestral/60 mb-12">¿Estás listo para mirar la verdad?</p>
+                <a href="/chat" class="btn-portal">Abrir Portal</a>
             </div>
         </div>
     </section>
 
     <script>
-        // --- AUDIO ENGINE ---
         const ambient = document.getElementById('ambient-drone');
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
@@ -193,7 +163,6 @@
             initGalaxy();
         };
 
-        // --- GALAXY ENGINE (ULTRA IMMERSIVE) ---
         function initGalaxy() {
             const canvas = document.querySelector('#galaxy-canvas');
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -202,122 +171,48 @@
 
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 0, 10);
+            camera.position.set(0, 0, window.innerWidth < 768 ? 15 : 10);
 
-            // Fog para profundidad
-            scene.fog = new THREE.FogExp2(0x010103, 0.05);
+            const starTexture = (() => {
+                const c = document.createElement('canvas');
+                c.width = 64; c.height = 64;
+                const ctx = c.getContext('2d');
+                const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+                g.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                g.addColorStop(0.5, 'rgba(242, 226, 176, 0.2)');
+                g.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64);
+                return new THREE.CanvasTexture(c);
+            })();
 
-            // Textura Estelar Pro
-            const createStarTexture = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = 128; canvas.height = 128;
-                const ctx = canvas.getContext('2d');
-                const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-                grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                grad.addColorStop(0.1, 'rgba(242, 226, 176, 0.8)');
-                grad.addColorStop(0.4, 'rgba(75, 44, 94, 0.2)');
-                grad.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
-                return new THREE.CanvasTexture(canvas);
-            };
-
-            const starTexture = createStarTexture();
-
-            // Capa 1: Centro Denso
-            const coreParams = { count: 40000, size: 0.05 };
+            const count = window.innerWidth < 768 ? 15000 : 35000;
             const coreGeo = new THREE.BufferGeometry();
-            const corePos = new Float32Array(coreParams.count * 3);
-            const coreCol = new Float32Array(coreParams.count * 3);
+            const corePos = new Float32Array(count * 3);
+            const coreCol = new Float32Array(count * 3);
 
-            for (let i = 0; i < coreParams.count; i++) {
+            for (let i = 0; i < count; i++) {
                 const i3 = i * 3;
-                const radius = Math.random() * 15;
-                const spin = radius * 5;
+                const r = Math.random() * 15;
+                const spin = r * 5;
                 const branch = (i % 3) * (Math.PI * 2 / 3);
-
-                corePos[i3] = Math.cos(branch + spin) * radius + (Math.random() - 0.5) * 3;
-                corePos[i3 + 1] = (Math.random() - 0.5) * (Math.random() * 2);
-                corePos[i3 + 2] = Math.sin(branch + spin) * radius + (Math.random() - 0.5) * 3;
-
+                corePos[i3] = Math.cos(branch + spin) * r + (Math.random() - 0.5) * 3;
+                corePos[i3 + 1] = (Math.random() - 0.5) * 2;
+                corePos[i3 + 2] = Math.sin(branch + spin) * r + (Math.random() - 0.5) * 3;
                 const c = new THREE.Color(i % 3 === 0 ? '#4B2C5E' : (i % 3 === 1 ? '#2E3A59' : '#F2E2B0'));
                 coreCol[i3] = c.r; coreCol[i3+1] = c.g; coreCol[i3+2] = c.b;
             }
 
             coreGeo.setAttribute('position', new THREE.BufferAttribute(corePos, 3));
             coreGeo.setAttribute('color', new THREE.BufferAttribute(coreCol, 3));
-
-            const coreMat = new THREE.PointsMaterial({
-                size: coreParams.size,
-                sizeAttenuation: true,
-                map: starTexture,
-                transparent: true,
-                blending: THREE.AdditiveBlending,
-                vertexColors: true,
-                depthWrite: false
-            });
-
-            const core = new THREE.Points(coreGeo, coreMat);
+            const core = new THREE.Points(coreGeo, new THREE.PointsMaterial({ size: 0.06, map: starTexture, transparent: true, blending: THREE.AdditiveBlending, vertexColors: true, depthWrite: false }));
             scene.add(core);
 
-            // Capa 2: Estrellas de Fondo (Parallax)
-            const bgGeo = new THREE.BufferGeometry();
-            const bgPos = new Float32Array(5000 * 3);
-            for(let i=0; i<5000*3; i++) bgPos[i] = (Math.random()-0.5) * 100;
-            bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
-            const bgMat = new THREE.PointsMaterial({ size: 0.1, color: 0xffffff, transparent: true, opacity: 0.5, map: starTexture });
-            const backgroundStars = new THREE.Points(bgGeo, bgMat);
-            scene.add(backgroundStars);
-
-            // --- ANIMACIONES GSAP ---
             gsap.registerPlugin(ScrollTrigger);
-            
-            // Revelado de Texto
-            gsap.to(".reveal", { 
-                opacity: 1, filter: "blur(0px)", y: 0, 
-                duration: 2, stagger: 0.3, ease: "power4.out" 
-            });
+            gsap.to(".reveal", { opacity: 1, filter: "blur(0px)", y: 0, duration: 2, stagger: 0.3, ease: "power4.out" });
+            gsap.to(camera.position, { z: window.innerWidth < 768 ? 5 : -2, scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 3 } });
 
-            // Vuelo Espacial al Scroll
-            gsap.to(camera.position, {
-                z: -5,
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 3
-                }
-            });
-
-            // Rotación Acelerada al Scroll
-            gsap.to(core.rotation, {
-                y: Math.PI * 2,
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 2
-                }
-            });
-
-            // Interactividad Ratón
-            let mouseX = 0, mouseY = 0;
-            window.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX / window.innerWidth - 0.5);
-                mouseY = (e.clientY / window.innerHeight - 0.5);
-            });
-
-            const clock = new THREE.Clock();
             const animate = () => {
-                const t = clock.getElapsedTime();
-                
                 core.rotation.y += 0.001;
-                backgroundStars.rotation.y -= 0.0002;
-
-                // Movimiento suave de cámara reactivo al ratón
-                camera.position.x += (mouseX * 5 - camera.position.x) * 0.02;
-                camera.position.y += (-mouseY * 5 - camera.position.y) * 0.02;
-                camera.lookAt(0, 0, 0);
-
                 renderer.render(scene, camera);
                 requestAnimationFrame(animate);
             };
