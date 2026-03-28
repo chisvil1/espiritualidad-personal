@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espiritualidad Personal | Constelaciones Familiares IA</title>
+    <title>Espiritualidad Personal | Guía de Sanación Sistémica</title>
     
-    <!-- Fuentes Originales -->
+    <!-- Google Fonts: Elegancia y Modernidad -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Frameworks -->
+    <!-- Tailwind & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
@@ -20,11 +20,11 @@
             theme: {
                 extend: {
                     colors: {
-                        zen: {
-                            wood: '#8B4513',
-                            almond: '#EADDCA',
-                            beige: '#F5F5DC',
-                            dark: '#2C1E11'
+                        soul: {
+                            bg: '#FCFAFA',
+                            accent: '#78350F',
+                            card: 'rgba(255, 255, 255, 0.7)',
+                            user: '#2C1E11'
                         }
                     },
                     fontFamily: {
@@ -38,143 +38,155 @@
 
     <style>
         body {
-            background-color: #FFF7ED; /* zen-almond light */
-            color: #1C1917;
-            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF7ED 0%, #FDF4FF 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
         }
 
-        .glass-card {
+        .glass-panel {
             background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(120, 53, 15, 0.2);
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-premium {
-            background-color: #78350F;
-            color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            transition: all 0.5s ease;
-        }
-
-        .btn-premium:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .chat-container {
-            height: 500px;
-            scrollbar-width: thin;
-            scrollbar-color: #78350F33 transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(120, 53, 15, 0.1);
         }
 
         .message-ai {
             background: white;
-            border-radius: 1.5rem 1.5rem 1.5rem 0;
-            border: 1px solid rgba(139, 69, 19, 0.1);
+            border: 1px solid rgba(120, 53, 15, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-radius: 24px 24px 24px 4px;
         }
 
         .message-user {
-            background: #78350F;
+            background: #2C1E11;
             color: white;
-            border-radius: 1.5rem 1.5rem 0 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 24px 24px 4px 24px;
         }
 
-        .typing-dot {
+        .chat-scroll {
+            height: calc(100vh - 280px);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(120, 53, 15, 0.1) transparent;
+        }
+
+        .chat-scroll::-webkit-scrollbar { width: 5px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: rgba(120, 53, 15, 0.1); border-radius: 10px; }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .animate-msg { animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Estilo para el Markdown dentro de los mensajes */
+        .prose p { margin-bottom: 0.75rem; line-height: 1.7; }
+        .prose p:last-child { margin-bottom: 0; }
+
+        .typing-indicator span {
             width: 6px;
             height: 6px;
-            background: #78350F;
+            background-color: #78350F;
             border-radius: 50%;
+            display: inline-block;
             animation: bounce 1.4s infinite ease-in-out both;
         }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
 
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
         }
-
-        .prose p { margin-bottom: 0.5rem; }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden">
+<body class="font-sans text-soul-user selection:bg-amber-100">
 
-    <!-- Hero Section -->
-    <header class="max-w-7xl mx-auto px-4 py-12 text-center">
-        <h1 class="text-4xl md:text-6xl font-serif font-bold text-amber-900 mb-6 leading-tight">
-            Sana tu linaje con la sabiduría de las <br class="hidden md:block"> 
-            <span class="italic text-zen-wood">Constelaciones Familiares</span>
-        </h1>
-        <p class="text-lg text-zen-dark/70 max-w-2xl mx-auto mb-10">
-            Explora las raíces de tu sistema familiar y encuentra la paz a través de la precisión de nuestra Inteligencia Artificial especializada.
-        </p>
-    </header>
+    <div class="max-w-4xl mx-auto px-4 py-8 md:py-12 flex flex-col h-screen">
+        
+        <!-- Header Minimalista -->
+        <header class="text-center mb-8 animate-msg" style="animation-delay: 0.1s;">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white shadow-xl mb-4">
+                <i data-lucide="sparkles" class="text-amber-800 w-8 h-8"></i>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-amber-950 tracking-tight mb-2">
+                Espiritualidad <span class="italic text-amber-800/80">Personal</span>
+            </h1>
+            <p class="text-sm font-medium text-amber-900/40 uppercase tracking-[0.4em]">
+                Sanación Sistémica • IA Consciente
+            </p>
+        </header>
 
-    <!-- Chat Interface -->
-    <main class="max-w-4xl mx-auto px-4 pb-20">
-        <div class="glass-card p-6 md:p-8">
-            <div class="flex items-center space-x-4 mb-8 border-b border-zen-wood/10 pb-4">
-                <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
-                    <i class="fas fa-dove text-amber-900 text-xl"></i>
+        <!-- Contenedor Principal -->
+        <div class="glass-panel rounded-[40px] flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Barra de Estado -->
+            <div class="px-8 py-4 border-b border-white/40 flex justify-between items-center bg-white/20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-xs font-semibold text-amber-900/60 tracking-wider uppercase">Sesión Privada Activa</span>
                 </div>
-                <div>
-                    <h2 class="font-serif text-xl font-bold text-amber-900">Guía Sistémico IA</h2>
-                    <p class="text-xs uppercase tracking-widest text-zen-wood/60">Conectado • Groq Llama 3.3</p>
-                </div>
+                <button onclick="location.reload()" class="hover:rotate-180 transition-transform duration-500 text-amber-900/40">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                </button>
             </div>
 
-            <div class="chat-container overflow-y-auto space-y-6 pr-2 mb-6" id="chat-window">
-                <!-- Bienvenida -->
-                <div class="flex justify-start">
-                    <div class="message-ai p-5 max-w-[85%] font-serif italic text-amber-900">
-                        "Honro tu presencia aquí. En este espacio sistémico, podemos mirar aquello que espera ser visto en tu familia. ¿Qué dinámicas o repeticiones sientes que es momento de sanar?"
+            <!-- Ventana de Mensajes -->
+            <div class="flex-1 overflow-y-auto px-6 py-8 chat-scroll space-y-8" id="chat-window">
+                <!-- Bienvenida AI -->
+                <div class="flex justify-start opacity-0 animate-msg" style="animation-delay: 0.5s;">
+                    <div class="message-ai p-6 max-w-[85%]">
+                        <p class="font-serif italic text-lg text-amber-950 leading-relaxed">
+                            "Te doy la bienvenida a este espacio sagrado. Aquí, honramos tus raíces y buscamos el orden que trae paz. ¿Qué movimiento desea hacer tu alma el día de hoy?"
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Input Area -->
-            <form id="chat-form" class="relative">
-                <input 
-                    type="text" 
-                    id="user-input"
-                    placeholder="Describe un sentimiento o una situación familiar..."
-                    class="w-full p-5 pr-32 rounded-3xl border border-zen-wood/20 bg-white/50 focus:outline-none focus:ring-2 focus:ring-zen-wood/20 transition-all text-gray-800"
-                    autocomplete="off"
-                >
-                <button 
-                    type="submit"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 btn-premium text-sm py-2 px-6"
-                >
-                    Enviar <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                </button>
-            </form>
+            <!-- Area de Entrada -->
+            <div class="p-6 bg-white/30 border-t border-white/50">
+                <form id="chat-form" class="relative max-w-2xl mx-auto">
+                    <input 
+                        type="text" 
+                        id="user-input"
+                        placeholder="Escribe aquí tus sentimientos o inquietudes..."
+                        class="w-full bg-white/80 border border-amber-900/10 rounded-[32px] px-8 py-5 pr-20 text-lg focus:outline-none focus:ring-4 focus:ring-amber-900/5 focus:bg-white transition-all shadow-sm placeholder:text-amber-950/20"
+                        autocomplete="off"
+                    >
+                    <button 
+                        type="submit"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-900 text-white w-14 h-14 rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center justify-center group"
+                    >
+                        <i data-lucide="arrow-up" class="w-6 h-6 group-hover:-translate-y-1 transition-transform"></i>
+                    </button>
+                </form>
+                <p class="text-center text-[9px] text-amber-900/30 mt-4 uppercase tracking-widest font-medium">
+                    Guiado por Groq Llama 3.3 • Un viaje hacia el interior
+                </p>
+            </div>
         </div>
-
-        <p class="text-center text-[10px] text-zen-wood/40 mt-6 uppercase tracking-[0.3em]">
-            Un espacio de sanación consciente • 2024
-        </p>
-    </main>
+    </div>
 
     <script>
+        // Inicializar Iconos
+        lucide.createIcons();
+
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
 
         let chatHistory = [
-            { role: "system", content: "Eres un terapeuta experto en Constelaciones Familiares y Sanación Sistémica. Tu lenguaje es profundo, respetuoso y sanador. Ayudas al usuario a identificar 'lealtades invisibles', 'excluidos' y 'desórdenes en la jerarquía familiar'. Usa frases sanadoras como 'Te veo', 'Tomo mi lugar', 'Gracias por lo que fue'. Tu objetivo es que el usuario sienta alivio y comprensión de su sistema familiar. Mantén las respuestas profundas pero concisas." }
+            { role: "system", content: "Eres un terapeuta de Constelaciones Familiares altamente profesional, empático y profundo. Tu tono es cálido pero clínico en su precisión sistémica. Usas un lenguaje que invita a la sanación: 'Mirar con amor', 'Asentir a lo que es', 'Honrar a los ancestros'. Evitas respuestas genéricas. Tu objetivo es que el usuario identifique dinámicas ocultas en su sistema familiar. Mantén las respuestas elegantes y profundas." }
         ];
 
         function addMessage(role, content) {
-            const div = document.createElement('div');
-            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-pulse-once`;
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-msg`;
             
             const bubble = document.createElement('div');
-            bubble.className = `p-5 max-w-[85%] ${role === 'user' ? 'message-user' : 'message-ai font-serif italic text-amber-900 prose'}`;
+            bubble.className = `p-6 max-w-[85%] ${role === 'user' ? 'message-user' : 'message-ai prose font-serif italic text-lg text-amber-950'}`;
             
             if (role === 'ai') {
                 bubble.innerHTML = marked.parse(content);
@@ -182,20 +194,25 @@
                 bubble.textContent = content;
             }
 
-            div.appendChild(bubble);
-            chatWindow.appendChild(div);
-            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+            wrapper.appendChild(bubble);
+            chatWindow.appendChild(wrapper);
+            
+            // Scroll suave
+            setTimeout(() => {
+                chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+            }, 100);
         }
 
         function showTyping() {
             const div = document.createElement('div');
             div.id = 'typing-indicator';
-            div.className = 'flex justify-start';
+            div.className = 'flex justify-start animate-msg';
             div.innerHTML = `
-                <div class="message-ai p-4 flex space-x-1 items-center">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
+                <div class="message-ai px-6 py-4 flex items-center space-x-2">
+                    <div class="typing-indicator flex space-x-1">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="text-xs font-medium text-amber-900/40 uppercase tracking-widest">IA reflexionando</span>
                 </div>
             `;
             chatWindow.appendChild(div);
@@ -235,7 +252,7 @@
             } catch (error) {
                 console.error("Error:", error);
                 hideTyping();
-                addMessage('ai', "El sistema familiar está en silencio. Por favor, intenta de nuevo.");
+                addMessage('ai', "Hubo una interrupción en la conexión. Por favor, respira profundo e inténtalo de nuevo.");
             }
         };
     </script>
