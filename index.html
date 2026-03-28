@@ -3,67 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espiritualidad Personal | Guía IA</title>
-    <link rel="icon" href="/favicon.ico">
+    <title>Espiritualidad Personal | Constelaciones Familiares IA</title>
     
-    <!-- Fuentes Zen -->
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Fuentes Originales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <!-- Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zen: {
+                            wood: '#8B4513',
+                            almond: '#EADDCA',
+                            beige: '#F5F5DC',
+                            dark: '#2C1E11'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --zen-bg: #fdfcfb;
-            --zen-accent: #6366f1;
-            --zen-text: #374151;
-            --zen-bubble-ai: #ffffff;
-            --zen-bubble-user: #f3f4f6;
-        }
-
         body {
+            background-color: #FFF7ED; /* zen-almond light */
+            color: #1C1917;
             font-family: 'Inter', sans-serif;
-            background-color: var(--zen-bg);
-            color: var(--zen-text);
         }
 
-        .serif { font-family: 'Lora', serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(120, 53, 15, 0.2);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-premium {
+            background-color: #78350F;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.5s ease;
+        }
+
+        .btn-premium:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
 
         .chat-container {
-            height: calc(100vh - 180px);
+            height: 500px;
             scrollbar-width: thin;
-            scrollbar-color: #e5e7eb transparent;
-        }
-
-        .chat-container::-webkit-scrollbar { width: 6px; }
-        .chat-container::-webkit-scrollbar-thumb { background-color: #e5e7eb; border-radius: 10px; }
-
-        .message-bubble {
-            max-width: 85%;
-            padding: 1.25rem;
-            line-height: 1.6;
-            transition: all 0.3s ease;
-        }
-
-        .message-user {
-            background-color: var(--zen-bubble-user);
-            border-radius: 20px 20px 4px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            scrollbar-color: #78350F33 transparent;
         }
 
         .message-ai {
-            background-color: var(--zen-bubble-ai);
-            border-radius: 20px 20px 20px 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.03);
+            background: white;
+            border-radius: 1.5rem 1.5rem 1.5rem 0;
+            border: 1px solid rgba(139, 69, 19, 0.1);
+        }
+
+        .message-user {
+            background: #78350F;
+            color: white;
+            border-radius: 1.5rem 1.5rem 0 1.5rem;
         }
 
         .typing-dot {
             width: 6px;
             height: 6px;
-            background: #9ca3af;
+            background: #78350F;
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
         }
@@ -75,100 +99,82 @@
             40% { transform: scale(1.0); }
         }
 
-        .prose p { margin-bottom: 0.75rem; }
-        .prose p:last-child { margin-bottom: 0; }
-        
-        #user-input {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .prose p { margin-bottom: 0.5rem; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden">
+<body class="min-h-screen overflow-x-hidden">
 
-    <!-- Header Elegante -->
-    <header class="bg-white/80 backdrop-blur-md border-b sticky top-0 z-10 p-4">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 bg-indigo-50 flex items-center justify-center rounded-full">
-                    <i class="fas fa-leaf text-indigo-500 text-lg"></i>
+    <!-- Hero Section -->
+    <header class="max-w-7xl mx-auto px-4 py-12 text-center">
+        <h1 class="text-4xl md:text-6xl font-serif font-bold text-amber-900 mb-6 leading-tight">
+            Sana tu linaje con la sabiduría de las <br class="hidden md:block"> 
+            <span class="italic text-zen-wood">Constelaciones Familiares</span>
+        </h1>
+        <p class="text-lg text-zen-dark/70 max-w-2xl mx-auto mb-10">
+            Explora las raíces de tu sistema familiar y encuentra la paz a través de la precisión de nuestra Inteligencia Artificial especializada.
+        </p>
+    </header>
+
+    <!-- Chat Interface -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+        <div class="glass-card p-6 md:p-8">
+            <div class="flex items-center space-x-4 mb-8 border-b border-zen-wood/10 pb-4">
+                <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-dove text-amber-900 text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="serif text-xl font-semibold text-gray-800 tracking-tight">Espiritualidad Personal</h1>
-                    <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">IA Guía • Groq Llama 3.3</p>
+                    <h2 class="font-serif text-xl font-bold text-amber-900">Guía Sistémico IA</h2>
+                    <p class="text-xs uppercase tracking-widest text-zen-wood/60">Conectado • Groq Llama 3.3</p>
+                </div>
+            </div>
+
+            <div class="chat-container overflow-y-auto space-y-6 pr-2 mb-6" id="chat-window">
+                <!-- Bienvenida -->
+                <div class="flex justify-start">
+                    <div class="message-ai p-5 max-w-[85%] font-serif italic text-amber-900">
+                        "Honro tu presencia aquí. En este espacio sistémico, podemos mirar aquello que espera ser visto en tu familia. ¿Qué dinámicas o repeticiones sientes que es momento de sanar?"
                     </div>
                 </div>
             </div>
-            <button onclick="location.reload()" class="text-gray-400 hover:text-indigo-500 transition-colors">
-                <i class="fas fa-redo-alt"></i>
-            </button>
-        </div>
-    </header>
 
-    <!-- Área de Chat -->
-    <main class="flex-1 overflow-y-auto p-4 md:p-8 chat-container" id="chat-window">
-        <div class="max-w-3xl mx-auto space-y-8 py-4" id="messages">
-            <!-- Bienvenida -->
-            <div class="flex justify-start fade-in">
-                <div class="message-bubble message-ai serif italic text-gray-600">
-                    <p class="mb-2">Bienvenido a este refugio de calma.</p>
-                    <p>Soy tu guía espiritual asistido por IA. Estoy aquí para escucharte sin juicio y reflexionar contigo sobre la vida, el propósito y la paz interior.</p>
-                    <p class="text-sm mt-3 opacity-70">¿Qué hay hoy en tu corazón?</p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Input Flotante -->
-    <footer class="p-4 md:p-6 bg-transparent">
-        <div class="max-w-3xl mx-auto">
-            <form id="chat-form" class="relative group">
+            <!-- Input Area -->
+            <form id="chat-form" class="relative">
                 <input 
                     type="text" 
                     id="user-input"
-                    placeholder="Comparte tus pensamientos..."
-                    class="w-full p-5 pr-16 rounded-3xl border border-gray-100 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-all text-gray-700 text-lg"
+                    placeholder="Describe un sentimiento o una situación familiar..."
+                    class="w-full p-5 pr-32 rounded-3xl border border-zen-wood/20 bg-white/50 focus:outline-none focus:ring-2 focus:ring-zen-wood/20 transition-all text-gray-800"
                     autocomplete="off"
                 >
                 <button 
                     type="submit"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-indigo-600 text-white w-12 h-12 rounded-2xl hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center justify-center"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 btn-premium text-sm py-2 px-6"
                 >
-                    <i class="fas fa-arrow-up"></i>
+                    Enviar <i class="fas fa-arrow-right ml-2 text-xs"></i>
                 </button>
             </form>
-            <div class="flex justify-center items-center space-x-2 mt-4 opacity-40">
-                <span class="text-[9px] uppercase tracking-[0.2em] text-gray-500">Espacio de Reflexión • 2024</span>
-            </div>
         </div>
-    </footer>
+
+        <p class="text-center text-[10px] text-zen-wood/40 mt-6 uppercase tracking-[0.3em]">
+            Un espacio de sanación consciente • 2024
+        </p>
+    </main>
 
     <script>
         const chatWindow = document.getElementById('chat-window');
-        const messagesDiv = document.getElementById('messages');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
 
         let chatHistory = [
-            { role: "system", content: "Eres un guía espiritual sabio, profundamente compasivo y zen. Tu lenguaje es poético, suave y reflexivo. No das consejos dogmáticos, sino que invitas a la introspección. Usa metáforas naturales (el río, la montaña, el viento). Tu objetivo es que el usuario se sienta escuchado y encuentre su propia paz. Mantén las respuestas breves pero profundas." }
+            { role: "system", content: "Eres un terapeuta experto en Constelaciones Familiares y Sanación Sistémica. Tu lenguaje es profundo, respetuoso y sanador. Ayudas al usuario a identificar 'lealtades invisibles', 'excluidos' y 'desórdenes en la jerarquía familiar'. Usa frases sanadoras como 'Te veo', 'Tomo mi lugar', 'Gracias por lo que fue'. Tu objetivo es que el usuario sienta alivio y comprensión de su sistema familiar. Mantén las respuestas profundas pero concisas." }
         ];
 
         function addMessage(role, content) {
-            const msgWrapper = document.createElement('div');
-            msgWrapper.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} fade-in`;
+            const div = document.createElement('div');
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-pulse-once`;
             
             const bubble = document.createElement('div');
-            bubble.className = `message-bubble ${role === 'user' ? 'message-user' : 'message-ai serif prose'}`;
+            bubble.className = `p-5 max-w-[85%] ${role === 'user' ? 'message-user' : 'message-ai font-serif italic text-amber-900 prose'}`;
             
             if (role === 'ai') {
                 bubble.innerHTML = marked.parse(content);
@@ -176,27 +182,23 @@
                 bubble.textContent = content;
             }
 
-            msgWrapper.appendChild(bubble);
-            messagesDiv.appendChild(msgWrapper);
-            
-            // Scroll suave al fondo
-            setTimeout(() => {
-                chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
-            }, 100);
+            div.appendChild(bubble);
+            chatWindow.appendChild(div);
+            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
 
         function showTyping() {
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typing-indicator';
-            typingDiv.className = 'flex justify-start fade-in';
-            typingDiv.innerHTML = `
-                <div class="message-ai px-6 py-4 rounded-full flex space-x-1 items-center">
+            const div = document.createElement('div');
+            div.id = 'typing-indicator';
+            div.className = 'flex justify-start';
+            div.innerHTML = `
+                <div class="message-ai p-4 flex space-x-1 items-center">
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
                 </div>
             `;
-            messagesDiv.appendChild(typingDiv);
+            chatWindow.appendChild(div);
             chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
 
@@ -224,8 +226,6 @@
                 });
 
                 const data = await response.json();
-                if (data.error) throw new Error(data.error);
-
                 const aiResponse = data.choices[0].message.content;
 
                 hideTyping();
@@ -235,7 +235,7 @@
             } catch (error) {
                 console.error("Error:", error);
                 hideTyping();
-                addMessage('ai', "El silencio a veces es la única respuesta, pero en este caso es un error técnico. Por favor, intenta de nuevo.");
+                addMessage('ai', "El sistema familiar está en silencio. Por favor, intenta de nuevo.");
             }
         };
     </script>
