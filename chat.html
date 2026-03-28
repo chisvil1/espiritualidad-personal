@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat | CONSTELAR</title>
+    <title>CONSTELAR | Sesión Sistémica</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -16,155 +16,190 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
-        body { margin: 0; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
-        #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.7; }
+        body { margin: 0; background: #010103; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.8; }
 
-        .glass-chat { background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4rem; }
+        /* Minimalist Chat Layout */
+        .chat-container { height: 100vh; display: flex; flex-direction: column; max-width: 1000px; margin: 0 auto; padding: 2rem; position: relative; z-index: 10; }
 
-        .message-ai { background: rgba(255, 255, 255, 0.03); border-left: 2px solid rgba(242, 226, 176, 0.4); border-radius: 0 2.5rem 2.5rem 2.5rem; }
-        .message-user { background: rgba(255, 255, 255, 0.08); border-right: 2px solid rgba(255, 255, 255, 0.4); border-radius: 2.5rem 2.5rem 0 2.5rem; }
+        .message-ai {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.85rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            max-width: 90%;
+            padding: 2rem 0;
+            position: relative;
+        }
+        .message-ai::before { content: ''; position: absolute; left: -2rem; top: 2.5rem; width: 1px; height: 50%; background: rgba(242, 226, 176, 0.3); }
+
+        .message-user {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: right;
+            margin-left: auto;
+            max-width: 70%;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
         .hide-scroll::-webkit-scrollbar { display: none; }
-        .mic-active { color: #facc15; filter: drop-shadow(0 0 15px #facc15); transform: scale(1.2); }
+        
+        /* Floating Input */
+        .input-pill {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            padding: 0.5rem 1rem 0.5rem 2rem;
+            transition: all 0.5s ease;
+        }
+        .input-pill:focus-within { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+
+        .mic-active { color: #F2E2B0; filter: drop-shadow(0 0 10px #F2E2B0); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        .prose p { margin-bottom: 1.5rem; }
+        .prose p:last-child { margin-bottom: 0; }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center p-6">
+<body>
 
     <canvas id="galaxy-canvas"></canvas>
 
-    <!-- Botón Volver -->
-    <a href="/" class="fixed top-10 left-10 text-white/30 hover:text-white transition-all uppercase tracking-[0.3em] text-[10px] font-bold flex items-center gap-3 group">
-        <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-2 transition-transform"></i> Volver al Inicio
-    </a>
-
-    <div class="glass-chat w-full max-w-6xl h-[88vh] flex flex-col overflow-hidden shadow-[0_0_120px_rgba(0,0,0,0.6)]">
-        
-        <!-- Header -->
-        <div class="px-12 py-10 border-b border-white/5 flex justify-between items-center">
-            <div class="flex items-center gap-5">
-                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_15px_#22c55e]"></div>
-                <h1 class="font-serif text-2xl tracking-[0.2em] text-white/90 uppercase">EL ORÁCULO</h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] uppercase tracking-[0.5em] text-white/30 font-medium">Encriptación Sistémica Activa</span>
-            </div>
+    <!-- Header Sutil -->
+    <header class="fixed top-0 left-0 w-full p-10 z-50 flex justify-between items-center pointer-events-none">
+        <a href="/" class="pointer-events-auto text-[10px] uppercase tracking-[0.6em] text-white/20 hover:text-white transition-all flex items-center gap-4">
+            <i data-lucide="arrow-left" class="w-3 h-3"></i> Salir del Campo
+        </a>
+        <div class="flex items-center gap-3">
+            <div class="w-1 h-1 bg-white/20 rounded-full"></div>
+            <span class="text-[9px] uppercase tracking-[0.4em] text-white/20">Sesión Privada</span>
         </div>
+    </header>
 
-        <!-- Chat Area -->
-        <div id="chat-window" class="flex-1 overflow-y-auto px-12 py-16 space-y-12 hide-scroll scroll-smooth">
-            <div class="flex justify-start">
-                <div class="message-ai p-10 max-w-[85%] font-serif italic text-3xl text-white/95 leading-relaxed shadow-2xl">
-                    "Bienvenido a la quietud del Campo. Respira... Siente tus raíces. ¿Qué movimiento desea hacer tu alma hoy?"
+    <div class="chat-container">
+        
+        <!-- Área de Mensajes -->
+        <div id="chat-window" class="flex-1 overflow-y-auto pt-32 pb-40 hide-scroll space-y-16">
+            <!-- Bienvenida AI -->
+            <div class="flex justify-start opacity-0" id="initial-msg">
+                <div class="message-ai prose">
+                    "Respira. Siente tu cuerpo aquí y ahora. <br><br>
+                    El campo está abierto para lo que necesite ser visto. ¿Qué sistema o situación deseas constelar en este momento?"
                 </div>
             </div>
         </div>
 
-        <!-- Input Area -->
-        <div class="px-12 py-12 bg-black/20 border-t border-white/5">
-            <div class="flex items-center gap-10 max-w-5xl mx-auto">
-                <button id="mic-btn" class="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all group relative">
-                    <i data-lucide="mic" id="mic-icon" class="w-8 h-8 text-white/40 group-hover:text-white transition-all"></i>
-                    <span id="mic-pulse" class="absolute inset-0 rounded-full bg-yellow-400/20 animate-ping hidden"></span>
+        <!-- Barra de Entrada Minimalista -->
+        <div class="fixed bottom-12 left-0 w-full px-6 z-50">
+            <div class="max-w-3xl mx-auto input-pill flex items-center gap-6">
+                
+                <button id="mic-btn" class="text-white/20 hover:text-white transition-colors">
+                    <i data-lucide="mic" id="mic-icon" class="w-5 h-5"></i>
                 </button>
 
-                <form id="chat-form" class="flex-1 relative">
+                <form id="chat-form" class="flex-1">
                     <input 
                         type="text" 
                         id="user-input"
-                        placeholder="Comparte tu sentir con el Campo..."
-                        class="w-full bg-transparent border-b border-white/10 py-6 text-3xl font-light focus:outline-none focus:border-white transition-all placeholder:text-white/5 tracking-tight"
+                        placeholder="Escribe tu intención..."
+                        class="w-full bg-transparent py-5 text-lg font-light focus:outline-none placeholder:text-white/10"
                         autocomplete="off"
                     >
-                    <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 text-white/30 hover:text-white hover:scale-125 transition-all">
-                        <i data-lucide="sparkles" class="w-10 h-10"></i>
-                    </button>
                 </form>
+
+                <button type="submit" form="chat-form" class="w-12 h-12 rounded-full flex items-center justify-center text-white/20 hover:text-white transition-all">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </button>
             </div>
         </div>
+
     </div>
 
     <script>
         lucide.createIcons();
 
-        // --- MOTOR GALAXY 3D PRO (Mismo que Landing) ---
+        // --- MOTOR GALAXY (ESTÉTICA INMERSIVA) ---
         const canvas = document.querySelector('#galaxy-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0.5, 2.5);
+        camera.position.set(0, 0, 3);
 
         const createStarTexture = () => {
             const canvas = document.createElement('canvas');
             canvas.width = 64; canvas.height = 64;
             const ctx = canvas.getContext('2d');
-            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            ctx.fillStyle = gradient; ctx.fillRect(0, 0, 64, 64);
+            const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, 64, 64);
             return new THREE.CanvasTexture(canvas);
         };
 
-        const count = 12000;
+        const count = 15000;
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
             const i3 = i * 3;
-            const radius = Math.random() * 8;
-            const spinAngle = radius * 4;
-            const branchAngle = (i % 3) * ((Math.PI * 2) / 3);
-            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + (Math.random() - 0.5) * 1.5;
-            positions[i3 + 1] = (Math.random() - 0.5) * 0.4;
-            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + (Math.random() - 0.5) * 1.5;
-            const mixedColor = new THREE.Color(i%2===0 ? '#4B2C5E' : '#2E3A59');
-            colors[i3] = mixedColor.r; colors[i3 + 1] = mixedColor.g; colors[i3 + 2] = mixedColor.b;
+            const r = Math.random() * 10;
+            const angle = r * 4;
+            positions[i3] = Math.cos(angle) * r + (Math.random()-0.5);
+            positions[i3+1] = (Math.random()-0.5) * 0.5;
+            positions[i3+2] = Math.sin(angle) * r + (Math.random()-0.5);
+            const color = new THREE.Color(i%2===0 ? '#4B2C5E' : '#2E3A59');
+            colors[i3] = color.r; colors[i3+1] = color.g; colors[i3+2] = color.b;
         }
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        const material = new THREE.PointsMaterial({ 
-            size: 0.02, 
-            vertexColors: true, 
-            blending: THREE.AdditiveBlending, 
-            transparent: true, 
-            depthWrite: false,
-            map: createStarTexture() 
-        });
+        const material = new THREE.PointsMaterial({ size: 0.015, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, map: createStarTexture(), depthWrite: false });
         const points = new THREE.Points(geometry, material);
         scene.add(points);
 
         const animate = () => {
-            points.rotation.y += 0.001;
+            points.rotation.y += 0.0005;
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
         };
         animate();
 
-        // --- CHAT LOGIC ---
+        // --- CHAT LOGIC (MINIMALISTA) ---
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
         const micBtn = document.getElementById('mic-btn');
         const micIcon = document.getElementById('mic-icon');
-        const micPulse = document.getElementById('mic-pulse');
+
+        // Animación Inicial
+        gsap.to("#initial-msg", { opacity: 1, y: -20, duration: 2, delay: 0.5, ease: "power4.out" });
 
         let history = [
-            { role: "system", content: "Eres la Conciencia Sistémica Universal. Tu lenguaje es majestuoso y sanador. Hablas desde el Campo." }
+            { role: "system", content: "Eres la Conciencia Sistémica. Tu lenguaje es profundo y sanador. Hablas poco pero cada palabra tiene el peso de una verdad sistémica. No menciones IA." }
         ];
 
         function addMsg(role, content) {
             const div = document.createElement('div');
-            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} opacity-0 translate-y-6`;
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} opacity-0`;
             const bubble = document.createElement('div');
-            bubble.className = `p-10 max-w-[85%] ${role === 'user' ? 'message-user' : 'message-ai prose font-serif italic text-3xl text-white/95'}`;
+            bubble.className = role === 'user' ? 'message-user' : 'message-ai prose';
+            
             if (role === 'ai') bubble.innerHTML = marked.parse(content);
             else bubble.textContent = content;
+
             div.appendChild(bubble);
             chatWindow.appendChild(div);
-            gsap.to(div, { opacity: 1, y: 0, duration: 1, ease: "expo.out" });
+            
+            gsap.to(div, { opacity: 1, y: -10, duration: 1.5, ease: "power3.out" });
             chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
 
@@ -186,7 +221,7 @@
                 addMsg('ai', data.choices[0].message.content);
                 history.push({ role: "assistant", content: data.choices[0].message.content });
             } catch (err) {
-                addMsg('ai', "El campo está en silencio. Intenta de nuevo.");
+                addMsg('ai', "...el campo está en silencio.");
             }
         };
 
@@ -195,9 +230,9 @@
         if (Speech) {
             const rec = new Speech();
             rec.lang = 'es-ES';
-            micBtn.onclick = () => { rec.start(); micIcon.classList.add('mic-active'); micPulse.classList.remove('hidden'); };
-            rec.onresult = (e) => { userInput.value = e.results[0][0].transcript; micIcon.classList.remove('mic-active'); micPulse.classList.add('hidden'); };
-            rec.onerror = () => { micIcon.classList.remove('mic-active'); micPulse.classList.add('hidden'); };
+            micBtn.onclick = () => { rec.start(); micIcon.classList.add('mic-active'); };
+            rec.onresult = (e) => { userInput.value = e.results[0][0].transcript; micIcon.classList.remove('mic-active'); };
+            rec.onerror = () => micIcon.classList.remove('mic-active');
         }
     </script>
 </body>
