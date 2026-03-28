@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espiritualidad Personal | IA</title>
+    <link rel="icon" href="/favicon.ico">
+    
+    <!-- Fuentes Espirituales -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS para diseño rápido y limpio -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Marked.js para Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #2d3436;
+        }
+        .serif {
+            font-family: 'Lora', serif;
+        }
+        .chat-container {
+            height: calc(100vh - 180px);
+        }
+        .message-user {
+            background-color: #e2e8f0;
+            border-radius: 18px 18px 0 18px;
+        }
+        .message-ai {
+            background-color: #ffffff;
+            border-radius: 18px 18px 18px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e0;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        /* Estilos Markdown */
+        .prose p { margin-bottom: 1rem; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-100 p-2 rounded-full">
+                <i class="fas fa-dove text-indigo-600 text-xl"></i>
+            </div>
+            <div>
+                <h1 class="serif text-xl font-bold text-indigo-900 leading-tight">Espiritualidad Personal</h1>
+                <p class="text-xs text-gray-500 uppercase tracking-widest">Guía & Reflexión con IA</p>
+            </div>
+        </div>
+        <div class="hidden md:block text-right">
+            <span class="text-xs font-semibold px-2 py-1 bg-green-100 text-green-700 rounded-full">Groq Online</span>
+        </div>
+    </header>
+
+    <!-- Chat Area -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 chat-container" id="chat-window">
+        <div class="max-w-3xl mx-auto space-y-6" id="messages">
+            <!-- Bienvenida -->
+            <div class="message-ai p-4 serif italic text-gray-600">
+                Bienvenido a este espacio de paz. ¿En qué puedo acompañarte hoy en tu camino espiritual?
+            </div>
+        </div>
+    </main>
+
+    <!-- Input Area -->
+    <footer class="bg-white border-t p-4 pb-8 md:pb-4">
+        <div class="max-w-3xl mx-auto">
+            <form id="chat-form" class="relative flex items-center">
+                <input 
+                    type="text" 
+                    id="user-input"
+                    placeholder="Escribe tu reflexión o pregunta aquí..."
+                    class="w-full p-4 pr-16 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all text-gray-700 shadow-inner"
+                    autocomplete="off"
+                >
+                <button 
+                    type="submit"
+                    class="absolute right-2 bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-colors shadow-md"
+                >
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+            <p class="text-center text-[10px] text-gray-400 mt-2">
+                Conectado vía Groq API • Impulsado por Inteligencia Artificial
+            </p>
+        </div>
+    </footer>
+
+    <!-- Lógica de Groq -->
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const messagesDiv = document.getElementById('messages');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        let chatHistory = [
+            { role: "system", content: "Eres un guía espiritual sabio, compasivo y reflexivo. Tu objetivo es ayudar al usuario a encontrar paz, propósito y claridad en su vida. Responde de forma poética pero accesible, usando metáforas de la naturaleza y citas inspiradoras cuando sea apropiado." }
+        ];
+
+        function addMessage(role, content) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
+            
+            const bubble = document.createElement('div');
+            bubble.className = `max-w-[85%] p-4 prose ${role === 'user' ? 'message-user' : 'message-ai serif'}`;
+            
+            if (role === 'ai') {
+                bubble.innerHTML = marked.parse(content);
+            } else {
+                bubble.textContent = content;
+            }
+
+            msgDiv.appendChild(bubble);
+            messagesDiv.appendChild(msgDiv);
+            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex justify-start';
+            typingDiv.innerHTML = `
+                <div class="message-ai p-4 flex space-x-1">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        chatForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Limpiar input y añadir mensaje de usuario
+            userInput.value = '';
+            addMessage('user', text);
+            chatHistory.push({ role: "user", content: text });
+
+            // Mostrar "IA escribiendo"
+            showTyping();
+
+            try {
+                // Ahora llamamos a nuestro servidor en Render
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        messages: chatHistory
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) throw new Error(data.error);
+
+                const aiResponse = data.choices[0].message.content;
+
+                hideTyping();
+                addMessage('ai', aiResponse);
+                chatHistory.push({ role: "assistant", content: aiResponse });
+
+            } catch (error) {
+                console.error("Error:", error);
+                hideTyping();
+                addMessage('ai', "Lo siento, hubo un problema con la conexión espiritual. Por favor, intenta de nuevo.");
+            }
+        };
+    </script>
+</body>
+</html>
