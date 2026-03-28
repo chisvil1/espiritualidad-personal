@@ -8,19 +8,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
-// Servir archivos estáticos explícitamente desde la raíz
 app.use(express.static(path.join(__dirname, '/')));
 
-// Endpoint para el chat
+// API para el chat
 app.post('/api/chat', async (req, res) => {
   try {
     const { messages } = req.body;
     const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
     if (!GROQ_API_KEY) {
-      console.error("GROQ_API_KEY no encontrada");
-      return res.status(500).json({ error: "API Key no configurada en Render" });
+      return res.status(500).json({ error: "API Key no configurada" });
     }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -41,16 +38,20 @@ app.post('/api/chat', async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error("Error en el servidor:", error);
-    res.status(500).json({ error: "Error conectando con Groq" });
+    res.status(500).json({ error: "Error de conexión con el Campo" });
   }
 });
 
-// Ruta principal para servir index.html
-app.get('*', (req, res) => {
+// Ruta para la Landing
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Ruta para el Chat
+app.get('/chat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'chat.html'));
+});
+
 app.listen(PORT, () => {
-  console.log(`Servidor espiritual corriendo en puerto ${PORT}`);
+  console.log(`Portal Galáctico en puerto ${PORT}`);
 });
