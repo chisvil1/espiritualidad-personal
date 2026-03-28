@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espiritualidad Personal | Guía de Sanación Sistémica</title>
+    <title>Espiritualidad Personal | Sanación Sistémica y Constelaciones</title>
     
-    <!-- Google Fonts: Elegancia y Modernidad -->
+    <!-- Google Fonts: Elegancia Mística -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -20,11 +20,12 @@
             theme: {
                 extend: {
                     colors: {
-                        soul: {
-                            bg: '#FCFAFA',
-                            accent: '#78350F',
-                            card: 'rgba(255, 255, 255, 0.7)',
-                            user: '#2C1E11'
+                        cosmos: {
+                            deep: '#0B0E14',
+                            nebula: '#4B2C5E',
+                            indigo: '#2E3A59',
+                            rose: '#D4A5A5',
+                            gold: '#F2E2B0'
                         }
                     },
                     fontFamily: {
@@ -38,133 +39,222 @@
 
     <style>
         body {
-            background: linear-gradient(135deg, #FFF7ED 0%, #FDF4FF 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
+            background-color: #0B0E14;
+            color: #F8F9FA;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Video Background */
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            transform: translate(-50%, -50%);
+            filter: brightness(0.4) saturate(0.8);
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 25px 50px -12px rgba(120, 53, 15, 0.1);
+            background: rgba(11, 14, 20, 0.6);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(242, 226, 176, 0.1);
+            box-shadow: 0 0 40px rgba(75, 44, 94, 0.3);
         }
 
         .message-ai {
-            background: white;
-            border: 1px solid rgba(120, 53, 15, 0.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: rgba(46, 58, 89, 0.4);
+            border: 1px solid rgba(242, 226, 176, 0.1);
             border-radius: 24px 24px 24px 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         .message-user {
-            background: #2C1E11;
+            background: linear-gradient(135deg, #4B2C5E 0%, #2E3A59 100%);
             color: white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             border-radius: 24px 24px 4px 24px;
+            box-shadow: 0 4px 20px rgba(75, 44, 94, 0.4);
         }
 
         .chat-scroll {
-            height: calc(100vh - 280px);
+            height: calc(100vh - 320px);
             scrollbar-width: thin;
-            scrollbar-color: rgba(120, 53, 15, 0.1) transparent;
+            scrollbar-color: rgba(242, 226, 176, 0.2) transparent;
         }
 
-        .chat-scroll::-webkit-scrollbar { width: 5px; }
-        .chat-scroll::-webkit-scrollbar-thumb { background: rgba(120, 53, 15, 0.1); border-radius: 10px; }
+        .chat-scroll::-webkit-scrollbar { width: 4px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: rgba(242, 226, 176, 0.2); border-radius: 10px; }
 
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: translateY(10px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes nebulaPulse {
+            0% { text-shadow: 0 0 10px rgba(212, 165, 165, 0.4); }
+            50% { text-shadow: 0 0 25px rgba(212, 165, 165, 0.8), 0 0 10px rgba(242, 226, 176, 0.4); }
+            100% { text-shadow: 0 0 10px rgba(212, 165, 165, 0.4); }
         }
 
-        .animate-msg { animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .nebula-text { animation: nebulaPulse 4s infinite ease-in-out; }
 
-        /* Estilo para el Markdown dentro de los mensajes */
-        .prose p { margin-bottom: 0.75rem; line-height: 1.7; }
-        .prose p:last-child { margin-bottom: 0; }
-
-        .typing-indicator span {
-            width: 6px;
-            height: 6px;
-            background-color: #78350F;
-            border-radius: 50%;
-            display: inline-block;
-            animation: bounce 1.4s infinite ease-in-out both;
+        .btn-mystic {
+            background: linear-gradient(135deg, #D4A5A5 0%, #F2E2B0 100%);
+            color: #2C1E11;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
 
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
-            40% { transform: scale(1); opacity: 1; }
+        .btn-mystic:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 30px rgba(242, 226, 176, 0.4);
+        }
+
+        .prose p { margin-bottom: 0.8rem; line-height: 1.8; color: #F8F9FA; }
+        
+        /* Audio visualizer (fake) */
+        .visualizer {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 12px;
+        }
+        .bar {
+            width: 2px;
+            height: 100%;
+            background: #F2E2B0;
+            border-radius: 1px;
+            animation: barPulse 1s infinite ease-in-out;
+        }
+        @keyframes barPulse {
+            0%, 100% { height: 4px; }
+            50% { height: 12px; }
         }
     </style>
 </head>
-<body class="font-sans text-soul-user selection:bg-amber-100">
+<body class="selection:bg-rose-900/40">
 
-    <div class="max-w-4xl mx-auto px-4 py-8 md:py-12 flex flex-col h-screen">
+    <!-- Video de Fondo (Nebulosa) -->
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-flying-through-a-deep-blue-nebula-in-space-26462-large.mp4" type="video/mp4">
+    </video>
+
+    <!-- Audio Relajante (Hidden but controllable) -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="max-w-5xl mx-auto px-4 py-6 md:py-10 flex flex-col h-screen">
         
-        <!-- Header Minimalista -->
-        <header class="text-center mb-8 animate-msg" style="animation-delay: 0.1s;">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white shadow-xl mb-4">
-                <i data-lucide="sparkles" class="text-amber-800 w-8 h-8"></i>
-            </div>
-            <h1 class="text-4xl md:text-5xl font-serif font-bold text-amber-950 tracking-tight mb-2">
-                Espiritualidad <span class="italic text-amber-800/80">Personal</span>
-            </h1>
-            <p class="text-sm font-medium text-amber-900/40 uppercase tracking-[0.4em]">
-                Sanación Sistémica • IA Consciente
-            </p>
-        </header>
-
-        <!-- Contenedor Principal -->
-        <div class="glass-panel rounded-[40px] flex-1 flex flex-col overflow-hidden relative">
-            
-            <!-- Barra de Estado -->
-            <div class="px-8 py-4 border-b border-white/40 flex justify-between items-center bg-white/20">
-                <div class="flex items-center space-x-3">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-xs font-semibold text-amber-900/60 tracking-wider uppercase">Sesión Privada Activa</span>
+        <!-- Header Místico -->
+        <header class="flex justify-between items-center mb-6">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-full border border-cosmos-gold/30 flex items-center justify-center bg-cosmos-deep/40 backdrop-blur-md">
+                    <i data-lucide="sparkles" class="text-cosmos-gold w-6 h-6"></i>
                 </div>
-                <button onclick="location.reload()" class="hover:rotate-180 transition-transform duration-500 text-amber-900/40">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-serif font-bold tracking-wider text-cosmos-gold/90 nebula-text">
+                        Conciencia <span class="italic font-light opacity-80">Sistémica</span>
+                    </h1>
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-cosmos-rose/60 font-medium">El Orden del Amor • Sanación Ancestral</p>
+                </div>
+            </div>
+
+            <!-- Controles de Ambiente -->
+            <div class="flex items-center space-x-4">
+                <button id="toggle-music" class="p-3 rounded-full border border-white/10 hover:bg-white/10 transition-all group" title="Música de Meditación">
+                    <i data-lucide="music" id="music-icon" class="w-4 h-4 text-cosmos-gold opacity-40 group-hover:opacity-100"></i>
                 </button>
             </div>
+        </header>
 
-            <!-- Ventana de Mensajes -->
-            <div class="flex-1 overflow-y-auto px-6 py-8 chat-scroll space-y-8" id="chat-window">
-                <!-- Bienvenida AI -->
-                <div class="flex justify-start opacity-0 animate-msg" style="animation-delay: 0.5s;">
-                    <div class="message-ai p-6 max-w-[85%]">
-                        <p class="font-serif italic text-lg text-amber-950 leading-relaxed">
-                            "Te doy la bienvenida a este espacio sagrado. Aquí, honramos tus raíces y buscamos el orden que trae paz. ¿Qué movimiento desea hacer tu alma el día de hoy?"
-                        </p>
+        <!-- Cuerpo Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 overflow-hidden">
+            
+            <!-- Columna Izquierda: El Manifiesto -->
+            <div class="hidden lg:flex flex-col space-y-6">
+                <div class="glass-panel p-8 rounded-[32px] space-y-6">
+                    <h3 class="font-serif text-xl text-cosmos-gold">Mirar lo invisible</h3>
+                    <p class="text-sm leading-relaxed text-cosmos-rose/80 italic">
+                        "Lo que no se resuelve en una generación, pasa a la siguiente. Aquí, abrimos el campo para que los hilos del pasado se vuelvan luz."
+                    </p>
+                    <div class="pt-4 border-t border-white/5">
+                        <ul class="space-y-4">
+                            <li class="flex items-start space-x-3 text-xs opacity-60">
+                                <i data-lucide="check" class="w-4 h-4 text-cosmos-gold mt-0.5"></i>
+                                <span>Reconexión con el linaje materno y paterno.</span>
+                            </li>
+                            <li class="flex items-start space-x-3 text-xs opacity-60">
+                                <i data-lucide="check" class="w-4 h-4 text-cosmos-gold mt-0.5"></i>
+                                <span>Identificación de lealtades invisibles.</span>
+                            </li>
+                            <li class="flex items-start space-x-3 text-xs opacity-60">
+                                <i data-lucide="check" class="w-4 h-4 text-cosmos-gold mt-0.5"></i>
+                                <span>Asentimiento a la vida tal como fue.</span>
+                            </li>
+                        </ul>
                     </div>
+                </div>
+                <div class="flex-1 rounded-[32px] overflow-hidden relative group">
+                    <img src="https://images.unsplash.com/photo-1464802686167-b939a67e06a1?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-1000" alt="Galaxia">
+                    <div class="absolute inset-0 bg-gradient-to-t from-cosmos-deep via-transparent to-transparent"></div>
                 </div>
             </div>
 
-            <!-- Area de Entrada -->
-            <div class="p-6 bg-white/30 border-t border-white/50">
-                <form id="chat-form" class="relative max-w-2xl mx-auto">
-                    <input 
-                        type="text" 
-                        id="user-input"
-                        placeholder="Escribe aquí tus sentimientos o inquietudes..."
-                        class="w-full bg-white/80 border border-amber-900/10 rounded-[32px] px-8 py-5 pr-20 text-lg focus:outline-none focus:ring-4 focus:ring-amber-900/5 focus:bg-white transition-all shadow-sm placeholder:text-amber-950/20"
-                        autocomplete="off"
-                    >
-                    <button 
-                        type="submit"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-900 text-white w-14 h-14 rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center justify-center group"
-                    >
-                        <i data-lucide="arrow-up" class="w-6 h-6 group-hover:-translate-y-1 transition-transform"></i>
-                    </button>
-                </form>
-                <p class="text-center text-[9px] text-amber-900/30 mt-4 uppercase tracking-widest font-medium">
-                    Guiado por Groq Llama 3.3 • Un viaje hacia el interior
-                </p>
+            <!-- Columna Centro/Derecha: El Oráculo / Chat -->
+            <div class="lg:col-span-2 flex flex-col glass-panel rounded-[40px] overflow-hidden relative">
+                
+                <!-- Barra de Conexión -->
+                <div class="px-8 py-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+                    <div class="flex items-center space-x-3">
+                        <div class="visualizer">
+                            <div class="bar" style="animation-delay: 0.1s"></div>
+                            <div class="bar" style="animation-delay: 0.3s"></div>
+                            <div class="bar" style="animation-delay: 0.2s"></div>
+                        </div>
+                        <span class="text-[10px] font-bold text-cosmos-gold/50 tracking-widest uppercase">Campo Sistémico Abierto</span>
+                    </div>
+                </div>
+
+                <!-- Ventana de Diálogo -->
+                <div class="flex-1 overflow-y-auto px-6 py-8 chat-scroll space-y-10" id="chat-window">
+                    <div class="flex justify-start">
+                        <div class="message-ai p-8 max-w-[90%] font-serif italic text-xl text-cosmos-gold/90 leading-relaxed">
+                            "Honro tu presencia en este círculo. Respira profundo y siente a tus ancestros detrás de ti. ¿Qué dinámica en tu vida o familia sientes que está lista para ser vista y liberada?"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area de Interacción -->
+                <div class="p-6 bg-white/5 border-t border-white/10">
+                    <div class="max-w-3xl mx-auto flex items-center space-x-4">
+                        
+                        <!-- Botón Micrófono -->
+                        <button id="mic-btn" class="w-14 h-14 rounded-full border border-cosmos-rose/20 flex items-center justify-center hover:bg-cosmos-rose/10 transition-all group relative" title="Hablar con el alma">
+                            <i data-lucide="mic" id="mic-icon" class="w-6 h-6 text-cosmos-rose opacity-60 group-hover:opacity-100"></i>
+                            <span id="mic-pulse" class="absolute inset-0 rounded-full bg-cosmos-rose/20 animate-ping hidden"></span>
+                        </button>
+
+                        <!-- Input Texto -->
+                        <form id="chat-form" class="flex-1 relative">
+                            <input 
+                                type="text" 
+                                id="user-input"
+                                placeholder="Escribe aquí tu sentir o lo que buscas sanar..."
+                                class="w-full bg-transparent border-b border-white/10 py-4 px-2 text-lg focus:outline-none focus:border-cosmos-gold transition-all placeholder:text-white/10"
+                                autocomplete="off"
+                            >
+                            <button 
+                                type="submit"
+                                class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-cosmos-gold hover:scale-125 transition-transform"
+                            >
+                                <i data-lucide="arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <p class="text-center text-[8px] text-white/20 mt-6 uppercase tracking-[0.5em] font-light">
+                        Este es un espacio de escucha profunda y sin juicios • 2024
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -176,9 +266,56 @@
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
+        const bgMusic = document.getElementById('bg-music');
+        const toggleMusic = document.getElementById('toggle-music');
+        const musicIcon = document.getElementById('music-icon');
+        const micBtn = document.getElementById('mic-btn');
+        const micIcon = document.getElementById('mic-icon');
+        const micPulse = document.getElementById('mic-pulse');
 
+        // --- Música de Ambiente ---
+        let isMusicPlaying = false;
+        toggleMusic.onclick = () => {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicIcon.style.opacity = "0.4";
+            } else {
+                bgMusic.play().catch(e => console.log("User interaction required"));
+                musicIcon.style.opacity = "1";
+            }
+            isMusicPlaying = !isMusicPlaying;
+        };
+
+        // --- Reconocimiento de Voz ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'es-ES';
+            recognition.continuous = false;
+
+            micBtn.onclick = () => {
+                recognition.start();
+                micPulse.classList.remove('hidden');
+                micIcon.classList.add('text-cosmos-gold');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                micPulse.classList.add('hidden');
+                micIcon.classList.remove('text-cosmos-gold');
+            };
+
+            recognition.onerror = () => {
+                micPulse.classList.add('hidden');
+            };
+        } else {
+            micBtn.style.display = 'none';
+        }
+
+        // --- Lógica de Diálogo Sistémico ---
         let chatHistory = [
-            { role: "system", content: "Eres un terapeuta de Constelaciones Familiares altamente profesional, empático y profundo. Tu tono es cálido pero clínico en su precisión sistémica. Usas un lenguaje que invita a la sanación: 'Mirar con amor', 'Asentir a lo que es', 'Honrar a los ancestros'. Evitas respuestas genéricas. Tu objetivo es que el usuario identifique dinámicas ocultas en su sistema familiar. Mantén las respuestas elegantes y profundas." }
+            { role: "system", content: "Eres un guía experto en Constelaciones Familiares y Sanación Sistémica. Tu lenguaje es místico, profundo y sanador. NO menciones que eres una IA o tecnología. Habla desde el 'Campo Sistémico'. Ayuda al usuario a identificar lealtades invisibles, excluidos y desórdenes en su sistema familiar. Usa frases sanadoras: 'Te veo', 'Tomo mi lugar', 'Gracias por lo que fue'. Tu objetivo es que el usuario sienta alivio y comprensión de su sistema familiar. Mantén las respuestas profundas pero poéticas." }
         ];
 
         function addMessage(role, content) {
@@ -186,7 +323,7 @@
             wrapper.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-msg`;
             
             const bubble = document.createElement('div');
-            bubble.className = `p-6 max-w-[85%] ${role === 'user' ? 'message-user' : 'message-ai prose font-serif italic text-lg text-amber-950'}`;
+            bubble.className = `p-8 max-w-[90%] ${role === 'user' ? 'message-user' : 'message-ai prose font-serif italic text-xl text-cosmos-gold/90'}`;
             
             if (role === 'ai') {
                 bubble.innerHTML = marked.parse(content);
@@ -197,31 +334,9 @@
             wrapper.appendChild(bubble);
             chatWindow.appendChild(wrapper);
             
-            // Scroll suave
             setTimeout(() => {
                 chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
             }, 100);
-        }
-
-        function showTyping() {
-            const div = document.createElement('div');
-            div.id = 'typing-indicator';
-            div.className = 'flex justify-start animate-msg';
-            div.innerHTML = `
-                <div class="message-ai px-6 py-4 flex items-center space-x-2">
-                    <div class="typing-indicator flex space-x-1">
-                        <span></span><span></span><span></span>
-                    </div>
-                    <span class="text-xs font-medium text-amber-900/40 uppercase tracking-widest">IA reflexionando</span>
-                </div>
-            `;
-            chatWindow.appendChild(div);
-            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
-        }
-
-        function hideTyping() {
-            const indicator = document.getElementById('typing-indicator');
-            if (indicator) indicator.remove();
         }
 
         chatForm.onsubmit = async (e) => {
@@ -233,8 +348,6 @@
             addMessage('user', text);
             chatHistory.push({ role: "user", content: text });
 
-            showTyping();
-
             try {
                 const response = await fetch("/api/chat", {
                     method: "POST",
@@ -245,14 +358,12 @@
                 const data = await response.json();
                 const aiResponse = data.choices[0].message.content;
 
-                hideTyping();
                 addMessage('ai', aiResponse);
                 chatHistory.push({ role: "assistant", content: aiResponse });
 
             } catch (error) {
                 console.error("Error:", error);
-                hideTyping();
-                addMessage('ai', "Hubo una interrupción en la conexión. Por favor, respira profundo e inténtalo de nuevo.");
+                addMessage('ai', "El campo está en silencio por un momento. Respira y vuelve a intentarlo.");
             }
         };
     </script>
