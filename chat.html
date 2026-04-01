@@ -222,8 +222,8 @@
             e.preventDefault();
             const val = userInput.value.trim(); if (!val) return;
             
-            // LÓGICA DE MONETIZACIÓN
-            if (!isPaid && msgCount >= 5) {
+            // LÓGICA DE MONETIZACIÓN (Límite de 10 mensajes)
+            if (!isPaid && msgCount >= 10) {
                 payModal.style.display = 'block';
                 return;
             }
