@@ -15,6 +15,9 @@
     
     <!-- PAYPAL SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AQelJ3XyRwCbr12uMJj-LwbfZokP4tYMlfclwNHWeCG7GxTiZE5UCg-_GdM4U06ug68Dy1MGPof8uN2Q&currency=USD"></script>
+    
+    <!-- Librería para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -22,7 +25,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -39,7 +42,7 @@
         .message-user { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 0.85rem; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.4); text-align: right; margin-left: auto; max-width: 85%; padding: 0.8rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
         .hide-scroll { scrollbar-width: none; -ms-overflow-style: none; overflow-y: auto; }
         .hide-scroll::-webkit-scrollbar { display: none; }
-        .input-pill { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 100px; padding: 0.4rem 0.8rem 0.4rem 1.5rem; width: 100%; }
+        .input-pill { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 100px; padding: 0.4rem 0.8rem 0.4rem 1.5rem; width: 100%; }
 
         #breathing-guide { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; z-index: 5; display: none; pointer-events: none; }
         #breathing-circle { width: 100%; height: 100%; border: 1px solid rgba(242, 226, 176, 0.1); border-radius: 50%; background: radial-gradient(circle, rgba(242, 226, 176, 0.05) 0%, transparent 70%); }
@@ -51,10 +54,19 @@
         .ancestor-label { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 8px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(242, 226, 176, 0); white-space: nowrap; transition: all 1s ease; }
         .ancestor-node.active .ancestor-label { color: rgba(242, 226, 176, 0.6); }
 
-        #healing-modal, #pay-modal { display: none; position: fixed; inset: 0; background: rgba(1, 1, 3, 0.95); z-index: 100; padding: 2rem; overflow-y: auto; }
-        .healing-letter, .pay-card { max-width: 600px; margin: 4rem auto; background: #fdfaf3; color: #2c2c2c; padding: 4rem; font-family: 'Cormorant Garamond', serif; box-shadow: 0 0 50px rgba(0,0,0,0.5); position: relative; }
-        .healing-letter::before, .pay-card::before { content: ''; position: absolute; inset: 1rem; border: 1px solid rgba(0,0,0,0.05); pointer-events: none; }
+        #healing-modal, #pay-modal { display: none; position: fixed; inset: 0; background: rgba(1, 1, 3, 0.98); z-index: 100; padding: 2rem; overflow-y: auto; }
+        
+        /* Modal Pago - Tema Oscuro */
+        .pay-card { max-width: 500px; margin: 6rem auto; background: #050507; color: #fff; padding: 4rem; border: 1px solid rgba(242, 226, 176, 0.1); border-radius: 2rem; position: relative; box-shadow: 0 0 100px rgba(0,0,0,1); }
+        .pay-card::before { content: ''; position: absolute; inset: 0.5rem; border: 1px solid rgba(242, 226, 176, 0.03); border-radius: 1.5rem; pointer-events: none; }
+
+        /* Carta de Sanación */
+        .healing-letter { max-width: 600px; margin: 4rem auto; background: #fdfaf3; color: #2c2c2c; padding: 5rem; font-family: 'Cormorant Garamond', serif; box-shadow: 0 0 50px rgba(0,0,0,0.5); position: relative; }
+        .healing-letter::before { content: ''; position: absolute; inset: 1.5rem; border: 1px solid rgba(0,0,0,0.05); pointer-events: none; }
         .prose p { margin-bottom: 1.2rem; }
+        
+        .btn-gold { font-family: 'Cinzel', serif; background: #F2E2B0; color: #010103; padding: 1rem 2rem; border-radius: 100px; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; transition: all 0.5s ease; }
+        .btn-gold:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(242, 226, 176, 0.3); }
     </style>
 </head>
 <body>
@@ -96,24 +108,31 @@
         </div>
     </div>
 
-    <!-- MODAL DE PAGO -->
+    <!-- MODAL DE PAGO (TEMA OSCURO) -->
     <div id="pay-modal">
         <div class="pay-card text-center">
-            <h2 class="text-2xl uppercase tracking-[0.3em] mb-8">Intercambio de Energía</h2>
-            <p class="italic text-xl mb-10 opacity-70">Para profundizar en tu sanación y recibir tu Carta Ancestral, se requiere un intercambio sagrado.</p>
-            <div id="paypal-button-container"></div>
-            <button onclick="document.getElementById('pay-modal').style.display='none'" class="mt-10 text-[8px] uppercase tracking-widest opacity-30">Cerrar</button>
+            <h2 class="font-cinzel text-ancestral text-xl uppercase tracking-[0.4em] mb-8">Intercambio de Energía</h2>
+            <p class="font-garamond italic text-xl mb-12 text-white/60">Para profundizar en tu sanación y recibir tu Carta Ancestral, se requiere un intercambio sagrado.</p>
+            <div id="paypal-button-container" class="mb-8"></div>
+            <button onclick="document.getElementById('pay-modal').style.display='none'" class="text-[8px] uppercase tracking-widest text-white/20 hover:text-white transition-colors">Continuar en silencio</button>
         </div>
     </div>
 
+    <!-- MODAL DE CARTA (PARA PDF) -->
     <div id="healing-modal">
-        <div class="healing-letter">
-            <h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b pb-8">Carta de Sanación</h2>
-            <div id="healing-content" class="text-xl leading-relaxed italic space-y-6"></div>
-            <div class="mt-16 pt-8 border-t flex justify-between items-center text-zinc-400">
-                <span class="text-xs uppercase tracking-widest opacity-40">El Campo ha hablado</span>
-                <button id="close-modal" class="text-xs uppercase tracking-widest hover:font-bold">Cerrar</button>
+        <div id="pdf-area">
+            <div class="healing-letter">
+                <h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b border-black/10 pb-8">Carta de Sanación</h2>
+                <div id="healing-content" class="text-xl leading-relaxed italic space-y-6 text-zinc-800"></div>
+                <div class="mt-20 pt-8 border-t border-black/5 flex justify-between items-center text-zinc-400">
+                    <span class="text-[10px] uppercase tracking-widest">Portal Constelar • 2026</span>
+                    <span class="text-[10px] uppercase tracking-widest italic">Todo está en orden</span>
+                </div>
             </div>
+        </div>
+        <div class="max-w-[600px] mx-auto mt-8 flex justify-between items-center px-4">
+            <button id="download-pdf" class="btn-gold">Descargar PDF</button>
+            <button id="close-modal" class="text-xs uppercase tracking-widest text-white/40 hover:text-white">Cerrar</button>
         </div>
     </div>
 
@@ -221,16 +240,9 @@
         chatForm.onsubmit = async (e) => {
             e.preventDefault();
             const val = userInput.value.trim(); if (!val) return;
-            
-            // LÓGICA DE MONETIZACIÓN (Límite de 10 mensajes)
-            if (!isPaid && msgCount >= 10) {
-                payModal.style.display = 'block';
-                return;
-            }
-
-            userInput.value = ''; addMsg('user', val, true);
+            if (!isPaid && msgCount >= 10) { payModal.style.display = 'block'; return; }
+            userInput.value = ''; addMsg('user', val, true); reactToContent(val);
             msgCount++; localStorage.setItem('msg_count', msgCount);
-            
             history.push({ role: "user", content: val });
             localStorage.setItem('constelar_history', JSON.stringify(history));
             startBreathing();
@@ -238,22 +250,35 @@
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history }) });
                 const data = await res.json();
                 const reply = data.choices[0].message.content;
-                stopBreathing(); addMsg('ai', reply, true);
+                stopBreathing(); addMsg('ai', reply, true); reactToContent(reply);
                 history.push({ role: "assistant", content: reply });
                 localStorage.setItem('constelar_history', JSON.stringify(history));
             } catch (err) { stopBreathing(); addMsg('ai', "...el campo calla temporalmente.", true); }
         };
 
+        function reactToContent(text) {
+            const lowText = text.toLowerCase();
+            if (lowText.includes('padre') || lowText.includes('papá')) { pulseOrb(orbs.father, 0x4B2C5E); document.getElementById('node-padre').classList.add('active'); }
+            if (lowText.includes('madre') || lowText.includes('mamá')) { pulseOrb(orbs.mother, 0xF2E2B0); document.getElementById('node-madre').classList.add('active'); }
+            if (lowText.includes('abuelo') || lowText.includes('abuela')) { document.getElementById('node-abuelos').classList.add('active'); }
+            if (lowText.includes('hermano') || lowText.includes('hermana')) { document.getElementById('node-hermanos').classList.add('active'); }
+            if (lowText.includes('hijo') || lowText.includes('hija')) { document.getElementById('node-hijos').classList.add('active'); }
+            if (lowText.includes('tú') || lowText.includes('yo') || lowText.includes('mí')) { pulseOrb(orbs.self, 0xffffff); }
+        }
+
+        function pulseOrb(orb, color) {
+            gsap.to(orb.material, { opacity: 0.6, duration: 0.5, yoyo: true, repeat: 1 });
+            gsap.to(orb.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 0.5, yoyo: true, repeat: 1 });
+        }
+
         // PAYPAL BUTTON
         paypal.Buttons({
-            createOrder: (data, actions) => {
-                return actions.order.create({ purchase_units: [{ amount: { value: '9.99' } }] });
-            },
+            style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'paypal' },
+            createOrder: (data, actions) => { return actions.order.create({ purchase_units: [{ amount: { value: '9.99' } }] }); },
             onApprove: (data, actions) => {
                 return actions.order.capture().then(details => {
                     alert('Gracias por tu intercambio, ' + details.payer.name.given_name + '. El campo se expande para ti.');
-                    isPaid = true;
-                    localStorage.setItem('is_paid', 'true');
+                    isPaid = true; localStorage.setItem('is_paid', 'true');
                     payModal.style.display = 'none';
                 });
             }
@@ -269,6 +294,12 @@
                 .map(m => `<p>"${m.content.replace(/\[.*?\]/g, '').replace(/<br>/g, '')}"</p>`).join('');
             healingContent.innerHTML = `<p class="mb-8 opacity-40 italic">Para el alma que busca su lugar...</p>${sessionContent}<p class="mt-12 opacity-40 italic">Todo está en orden ahora. Respira.</p>`;
             healingModal.style.display = 'block';
+        };
+
+        document.getElementById('download-pdf').onclick = () => {
+            const element = document.getElementById('pdf-area');
+            const opt = { margin: 1, filename: 'Carta_Sanacion_Constelar.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+            html2pdf().set(opt).from(element).save();
         };
 
         document.getElementById('close-modal').onclick = () => { healingModal.style.display = 'none'; };
