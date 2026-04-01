@@ -8,6 +8,14 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
+      // Filtro para no contar visitas propias (Desarrollo o Admin)
+      if (window.location.hostname === 'localhost' || 
+          window.location.hostname === '127.0.0.1' || 
+          localStorage.getItem('skip_analytics') === 'true') {
+        window['ga-disable-G-FL2TJ3JP7J'] = true;
+        console.log('Google Analytics desactivado en este dispositivo.');
+      }
+
       gtag('config', 'G-FL2TJ3JP7J');
     </script>
     <meta charset="UTF-8">
