@@ -8,14 +8,11 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      // Filtro para no contar visitas propias (Desarrollo o Admin)
       if (window.location.hostname === 'localhost' || 
           window.location.hostname === '127.0.0.1' || 
           localStorage.getItem('skip_analytics') === 'true') {
         window['ga-disable-G-FL2TJ3JP7J'] = true;
-        console.log('Google Analytics desactivado en este dispositivo.');
       }
-
       gtag('config', 'G-FL2TJ3JP7J');
     </script>
     <meta charset="UTF-8">
@@ -38,82 +35,48 @@
 
         .chat-container { height: 100%; display: flex; flex-direction: column; width: 100%; max-width: 900px; margin: 0 auto; padding: 1rem; position: relative; z-index: 10; }
 
-        .message-ai {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.9);
-            font-style: italic;
-            max-width: 100%;
-            padding: 2rem 0;
-            text-align: left;
-        }
+        .message-ai { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; line-height: 1.4; color: rgba(255, 255, 255, 0.9); font-style: italic; max-width: 100%; padding: 2rem 0; text-align: left; }
         @media (min-width: 768px) { .message-ai { font-size: 2.2rem; padding: 3rem 0; } }
 
-        .message-user {
-            font-family: 'Inter', sans-serif;
-            font-weight: 300;
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-            color: rgba(255, 255, 255, 0.4);
-            text-align: right;
-            margin-left: auto;
-            max-width: 85%;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
+        .message-user { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 0.85rem; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.4); text-align: right; margin-left: auto; max-width: 85%; padding: 0.8rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
 
         .hide-scroll { scrollbar-width: none; -ms-overflow-style: none; overflow-y: auto; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         
-        .input-pill {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 100px;
-            padding: 0.4rem 0.8rem 0.4rem 1.5rem;
-            width: 100%;
-        }
+        .input-pill { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 100px; padding: 0.4rem 0.8rem 0.4rem 1.5rem; width: 100%; }
 
-        .mic-active { color: #F2E2B0; filter: drop-shadow(0 0 10px #F2E2B0); }
-        .mic-listening { animation: pulse-glow 3s infinite; }
-        @keyframes pulse-glow { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.2; } }
+        #breathing-guide { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; z-index: 5; display: none; pointer-events: none; }
+        #breathing-circle { width: 100%; height: 100%; border: 1px solid rgba(242, 226, 176, 0.1); border-radius: 50%; background: radial-gradient(circle, rgba(242, 226, 176, 0.05) 0%, transparent 70%); }
+        #breathing-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.4em; color: rgba(242, 226, 176, 0.4); font-weight: 300; }
 
+        #ancestor-tree { position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 1.5rem; z-index: 5; pointer-events: none; }
+        .ancestor-node { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 2s ease; position: relative; }
+        .ancestor-node.active { background: #F2E2B0; box-shadow: 0 0 15px #F2E2B0; border-color: #F2E2B0; transform: scale(1.5); }
+        .ancestor-label { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 8px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(242, 226, 176, 0); white-space: nowrap; transition: all 1s ease; }
+        .ancestor-node.active .ancestor-label { color: rgba(242, 226, 176, 0.6); }
+
+        #healing-modal { display: none; position: fixed; inset: 0; background: rgba(1, 1, 3, 0.95); z-index: 100; padding: 2rem; overflow-y: auto; }
+        .healing-letter { max-width: 600px; margin: 4rem auto; background: #fdfaf3; color: #2c2c2c; padding: 4rem; font-family: 'Cormorant Garamond', serif; box-shadow: 0 0 50px rgba(0,0,0,0.5); position: relative; }
+        .healing-letter::before { content: ''; position: absolute; inset: 1rem; border: 1px solid rgba(0,0,0,0.05); pointer-events: none; }
         .prose p { margin-bottom: 1.2rem; }
-
-        /* Estilos de la Carta de Sanación */
-        #healing-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(1, 1, 3, 0.95);
-            z-index: 100;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-        .healing-letter {
-            max-width: 600px;
-            margin: 4rem auto;
-            background: #fdfaf3;
-            color: #2c2c2c;
-            padding: 4rem;
-            font-family: 'Cormorant Garamond', serif;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            position: relative;
-        }
-        .healing-letter::before {
-            content: '';
-            position: absolute;
-            inset: 1rem;
-            border: 1px solid rgba(0,0,0,0.05);
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
-
     <canvas id="galaxy-canvas"></canvas>
+    <audio id="ambient-drone" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
+
+    <div id="breathing-guide">
+        <div id="breathing-circle"></div>
+        <div id="breathing-text">Inhala</div>
+    </div>
+
+    <div id="ancestor-tree">
+        <div class="ancestor-node" id="node-padre"><span class="ancestor-label">Linaje Paterno</span></div>
+        <div class="ancestor-node" id="node-madre"><span class="ancestor-label">Linaje Materno</span></div>
+        <div class="ancestor-node" id="node-abuelos"><span class="ancestor-label">Ancestros</span></div>
+        <div class="ancestor-node" id="node-hermanos"><span class="ancestor-label">Fraternidad</span></div>
+        <div class="ancestor-node" id="node-hijos"><span class="ancestor-label">Descendencia</span></div>
+    </div>
 
     <header class="fixed top-0 left-0 w-full p-6 md:p-10 z-50 flex justify-between items-center pointer-events-none">
         <a href="/" class="pointer-events-auto text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-white/20 hover:text-white flex items-center gap-3">
@@ -126,10 +89,7 @@
     </header>
 
     <div class="chat-container">
-        <div id="chat-window" class="flex-1 hide-scroll pt-24 pb-32 space-y-12">
-            <!-- Los mensajes se cargarán aquí -->
-        </div>
-
+        <div id="chat-window" class="flex-1 hide-scroll pt-24 pb-32 space-y-12"></div>
         <div class="fixed bottom-6 left-0 w-full px-4 z-50">
             <div class="max-w-2xl mx-auto flex flex-col gap-4">
                 <div class="flex justify-between items-center px-6">
@@ -137,9 +97,7 @@
                     <button id="export-btn" class="text-[7px] uppercase tracking-[0.3em] text-white/10 hover:text-ancestral/60 transition-colors">Exportar Sanación</button>
                 </div>
                 <div class="input-pill flex items-center gap-4">
-                    <button id="mic-btn" class="w-10 h-10 flex items-center justify-center text-white/20">
-                        <i data-lucide="mic" id="mic-icon" class="w-4 h-4"></i>
-                    </button>
+                    <button id="mic-btn" class="w-10 h-10 flex items-center justify-center text-white/20"><i data-lucide="mic" id="mic-icon" class="w-4 h-4"></i></button>
                     <form id="chat-form" class="flex-1">
                         <input type="text" id="user-input" placeholder="Escribe o habla..." class="w-full bg-transparent py-4 text-base md:text-lg font-light focus:outline-none placeholder:text-white/5" autocomplete="off">
                     </form>
@@ -148,10 +106,19 @@
         </div>
     </div>
 
+    <div id="healing-modal">
+        <div class="healing-letter">
+            <h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b pb-8">Carta de Sanación</h2>
+            <div id="healing-content" class="text-xl leading-relaxed italic space-y-6"></div>
+            <div class="mt-16 pt-8 border-t flex justify-between items-center text-zinc-400">
+                <span class="text-xs uppercase tracking-widest opacity-40">El Campo ha hablado</span>
+                <button id="close-modal" class="text-xs uppercase tracking-widest hover:font-bold transition-all">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
-
-        // --- GALAXY & ORBS (Three.js) ---
         const canvas = document.querySelector('#galaxy-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -161,7 +128,6 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 5;
 
-        // Estrellas de fondo
         const count = window.innerWidth < 768 ? 3000 : 8000;
         const geo = new THREE.BufferGeometry();
         const pos = new Float32Array(count * 3);
@@ -170,39 +136,22 @@
         const stars = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.02, color: 0x4B2C5E, transparent: true, opacity: 0.3 }));
         scene.add(stars);
 
-        // Orbes Sistémicos
         const createOrb = (color, x, y) => {
-            const g = new THREE.SphereGeometry(0.4, 32, 32);
-            const m = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.1 });
-            const orb = new THREE.Mesh(g, m);
+            const orb = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 32), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.1 }));
             orb.position.set(x, y, 0);
-            
-            // Glow exterior
-            const sG = new THREE.SphereGeometry(0.6, 32, 32);
-            const sM = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.05, side: THREE.BackSide });
-            const glow = new THREE.Mesh(sG, sM);
-            orb.add(glow);
-            
+            orb.add(new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.05, side: THREE.BackSide })));
             return orb;
         };
 
-        const orbs = {
-            self: createOrb(0xffffff, 0, -1),
-            father: createOrb(0x4B2C5E, -2, 1),
-            mother: createOrb(0xF2E2B0, 2, 1)
-        };
-
+        const orbs = { self: createOrb(0xffffff, 0, -1), father: createOrb(0x4B2C5E, -2, 1), mother: createOrb(0xF2E2B0, 2, 1) };
         Object.values(orbs).forEach(o => scene.add(o));
 
         function animate() {
             stars.rotation.y += 0.0001;
-            stars.rotation.x += 0.00005;
-            
             const time = Date.now() * 0.001;
             orbs.self.position.y = -1 + Math.sin(time * 0.5) * 0.1;
             orbs.father.position.y = 1 + Math.sin(time * 0.7) * 0.15;
             orbs.mother.position.y = 1 + Math.sin(time * 0.6) * 0.15;
-            
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
         }
@@ -210,24 +159,19 @@
 
         function reactToContent(text) {
             const lowText = text.toLowerCase();
-            if (lowText.includes('padre') || lowText.includes('papá') || lowText.includes('masculino')) {
-                pulseOrb(orbs.father, 0x4B2C5E);
-            }
-            if (lowText.includes('madre') || lowText.includes('mamá') || lowText.includes('femenino')) {
-                pulseOrb(orbs.mother, 0xF2E2B0);
-            }
-            if (lowText.includes('tú') || lowText.includes('yo') || lowText.includes('mí')) {
-                pulseOrb(orbs.self, 0xffffff);
-            }
+            if (lowText.includes('padre') || lowText.includes('papá')) { pulseOrb(orbs.father, 0x4B2C5E); document.getElementById('node-padre').classList.add('active'); }
+            if (lowText.includes('madre') || lowText.includes('mamá')) { pulseOrb(orbs.mother, 0xF2E2B0); document.getElementById('node-madre').classList.add('active'); }
+            if (lowText.includes('abuelo') || lowText.includes('abuela')) { document.getElementById('node-abuelos').classList.add('active'); }
+            if (lowText.includes('hermano') || lowText.includes('hermana')) { document.getElementById('node-hermanos').classList.add('active'); }
+            if (lowText.includes('hijo') || lowText.includes('hija')) { document.getElementById('node-hijos').classList.add('active'); }
+            if (lowText.includes('tú') || lowText.includes('yo') || lowText.includes('mí')) { pulseOrb(orbs.self, 0xffffff); }
         }
 
         function pulseOrb(orb, color) {
             gsap.to(orb.material, { opacity: 0.6, duration: 0.5, yoyo: true, repeat: 1 });
             gsap.to(orb.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 0.5, yoyo: true, repeat: 1 });
-            gsap.to(camera.position, { z: 4.8, duration: 0.5, yoyo: true, repeat: 1 });
         }
 
-        // --- CORE ---
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
@@ -235,149 +179,96 @@
         const micIcon = document.getElementById('mic-icon');
         const voiceStatus = document.getElementById('voice-mode-status');
         const clearBtn = document.getElementById('clear-btn');
-
-        const intencionUsuario = localStorage.getItem('constelar_intencion');
-        let history = JSON.parse(localStorage.getItem('constelar_history')) || [
-            { role: "system", content: `Eres una terapeuta sistémica maternal. Tu voz es suave y profunda. 
-            El usuario llega hoy con la siguiente intención: "${intencionUsuario || 'Sanación general'}".
-            Incluye siempre al final de cada respuesta un tag de emoción oculto entre corchetes, elige uno de estos: [PAZ], [DOLOR], [ORDEN], [AMOR], [LINAJE]. 
-            Respuestas breves (2-3 frases). Una pregunta por turno.` }
-        ];
-
-        // Cargar historial visualmente
-        if (history.length > 1) {
-            history.forEach(m => {
-                if (m.role !== 'system') addMsg(m.role, m.content, false);
-            });
-        } else {
-            const saludo = intencionUsuario 
-                ? `Respira. Siente tu presencia. El campo se abre para mirar eso que traes: "${intencionUsuario}". <br><br> ¿Qué es lo primero que sientes al traer esto aquí?`
-                : "Respira. Siente tu presencia. <br><br> ¿Qué sistema deseas mirar hoy?";
-            addMsg('ai', saludo, true);
-        }
-
-        clearBtn.onclick = () => {
-            if(confirm("¿Deseas liberar esta sesión y comenzar de nuevo?")) {
-                gtag('event', 'limpiar_alma');
-                localStorage.removeItem('constelar_history');
-                location.reload();
-            }
-        };
-
-        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        if (Speech) {
-            recognition = new Speech();
-            recognition.lang = 'es-ES';
-            recognition.continuous = true;
-            recognition.onresult = (e) => {
-                userInput.value = e.results[e.results.length - 1][0].transcript;
-                chatForm.dispatchEvent(new Event('submit'));
-            };
-        }
-
-        micBtn.onclick = () => {
-            isVoiceMode = !isVoiceMode;
-            if (isVoiceMode) {
-                gtag('event', 'uso_microfono', {'estado': 'activado'});
-                try { recognition.start(); } catch(e) {}
-                micIcon.classList.add('mic-active', 'mic-listening');
-                voiceStatus.style.opacity = '1';
-            } else {
-                gtag('event', 'uso_microfono', {'estado': 'desactivado'});
-                recognition.stop();
-                micIcon.classList.remove('mic-active', 'mic-listening');
-                voiceStatus.style.opacity = '0';
-            }
-        };
-
-        function speak(text) {
-            if (!isVoiceMode) return;
-            recognition.stop();
-            voiceStatus.style.opacity = '0';
-            const cleanText = text.replace(/[*_#]/g, '');
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            const voices = window.speechSynthesis.getVoices();
-            utterance.voice = voices.find(v => v.lang.includes('es') && (v.name.includes('Google') || v.name.includes('Helena'))) || voices[0];
-            utterance.rate = 0.85;
-            utterance.onend = () => { if (isVoiceMode) { setTimeout(() => { try { recognition.start(); } catch(e) {} voiceStatus.style.opacity = '1'; }, 600); } };
-            window.speechSynthesis.speak(utterance);
-        }
-
         const exportBtn = document.getElementById('export-btn');
         const healingModal = document.getElementById('healing-modal');
         const healingContent = document.getElementById('healing-content');
         const closeModal = document.getElementById('close-modal');
+        const ambientAudio = document.getElementById('ambient-drone');
 
-        exportBtn.onclick = () => {
-            gtag('event', 'exportar_sanacion_visual');
-            const sessionContent = history
-                .filter(m => m.role === 'assistant' || m.role === 'ai')
-                .slice(-3) // Solo las últimas 3 enseñanzas para que sea una carta breve
-                .map(m => `<p>"${m.content.replace(/\[.*?\]/g, '').replace(/<br>/g, '')}"</p>`)
-                .join('');
-            
-            healingContent.innerHTML = `
-                <p class="mb-8 opacity-40">Para el alma que busca su lugar...</p>
-                ${sessionContent}
-                <p class="mt-12 opacity-40">Todo está en orden ahora. Respira.</p>
-            `;
-            healingModal.style.display = 'block';
-            gsap.from(".healing-letter", { opacity: 0, y: 50, duration: 1.5, ease: "power4.out" });
-        };
+        const intencionUsuario = localStorage.getItem('constelar_intencion');
+        let history = JSON.parse(localStorage.getItem('constelar_history')) || [
+            { role: "system", content: `Eres una terapeuta sistémica maternal. Tu voz es suave y profunda. 
+            El usuario llega hoy con la intención: "${intencionUsuario || 'Sanación general'}".
+            Incluye siempre al final de cada respuesta un tag de emoción: [PAZ], [DOLOR], [ORDEN], [AMOR], [LINAJE]. 
+            Respuestas breves (2-3 frases). Una pregunta por turno.` }
+        ];
 
-        closeModal.onclick = () => {
-            gsap.to(".healing-letter", { opacity: 0, y: 50, duration: 0.8, onComplete: () => {
-                healingModal.style.display = 'none';
-            }});
-        };
+        if (history.length > 1) { history.forEach(m => { if (m.role !== 'system') addMsg(m.role, m.content, false); }); } 
+        else { addMsg('ai', intencionUsuario ? `Respira. El campo se abre para mirar: "${intencionUsuario}". ¿Qué sientes ahora?` : "Respira. ¿Qué sistema deseas mirar hoy?", true); }
+
+        function startBreathing() {
+            const guide = document.getElementById('breathing-guide');
+            const circle = document.getElementById('breathing-circle');
+            const text = document.getElementById('breathing-text');
+            guide.style.display = 'block';
+            const tl = gsap.timeline({ repeat: -1 });
+            tl.to(circle, { scale: 1.2, duration: 4, ease: "sine.inOut", onStart: () => text.innerText = "Inhala" })
+              .to(circle, { scale: 0.8, duration: 4, ease: "sine.inOut", onStart: () => text.innerText = "Exhala" });
+            guide._tl = tl;
+        }
+
+        function stopBreathing() {
+            const guide = document.getElementById('breathing-guide');
+            if (guide._tl) guide._tl.kill();
+            guide.style.display = 'none';
+        }
 
         function updateAtmosphere(emotion) {
-            let color;
+            let color, pitch = 1.0;
             switch(emotion) {
-                case 'PAZ': color = 0xF2E2B0; break;
-                case 'DOLOR': color = 0x4B2C5E; break;
-                case 'ORDEN': color = 0xffffff; break;
-                case 'AMOR': color = 0xff5555; break;
-                case 'LINAJE': color = 0x2E3A59; break;
+                case 'PAZ': color = 0xF2E2B0; pitch = 0.8; break;
+                case 'DOLOR': color = 0x4B2C5E; pitch = 0.6; break;
+                case 'ORDEN': color = 0xffffff; pitch = 1.0; break;
+                case 'AMOR': color = 0xff5555; pitch = 0.9; break;
+                case 'LINAJE': color = 0x2E3A59; pitch = 0.7; break;
                 default: color = 0x4B2C5E;
             }
             gsap.to(stars.material.color, { r: new THREE.Color(color).r, g: new THREE.Color(color).g, b: new THREE.Color(color).b, duration: 3 });
-            gsap.to(stars.material, { opacity: 0.6, duration: 1, yoyo: true, repeat: 1 });
+            if (ambientAudio) { gsap.to(ambientAudio, { volume: emotion === 'DOLOR' ? 0.4 : 0.1, duration: 3 }); ambientAudio.playbackRate = pitch; ambientAudio.play().catch(()=>{}); }
         }
 
         function addMsg(role, content, animate = true) {
-            // Extraer y limpiar tags de emoción
             let emotion = 'ORDEN';
-            const emotionMatch = content.match(/\[(PAZ|DOLOR|ORDEN|AMOR|LINAJE)\]/);
-            if (emotionMatch) {
-                emotion = emotionMatch[1];
-                content = content.replace(/\[(PAZ|DOLOR|ORDEN|AMOR|LINAJE)\]/g, '').trim();
-                if (role !== 'user') updateAtmosphere(emotion);
-            }
-
+            const match = content.match(/\[(PAZ|DOLOR|ORDEN|AMOR|LINAJE)\]/);
+            if (match) { emotion = match[1]; content = content.replace(/\[.*?\]/g, '').trim(); if (role !== 'user') updateAtmosphere(emotion); }
             const div = document.createElement('div');
             div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} ${animate ? 'opacity-0' : 'opacity-100'}`;
             const bubble = document.createElement('div');
             bubble.className = role === 'user' ? 'message-user' : 'message-ai prose';
-            bubble.innerHTML = (role === 'ai' || role === 'assistant') ? marked.parse(content) : content;
+            bubble.innerHTML = (role !== 'user') ? marked.parse(content) : content;
             div.appendChild(bubble);
             chatWindow.appendChild(div);
             if (animate) gsap.to(div, { opacity: 1, y: -5, duration: 2 });
             chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
+
+        chatForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const val = userInput.value.trim(); if (!val) return;
+            userInput.value = ''; addMsg('user', val, true); reactToContent(val);
+            history.push({ role: "user", content: val });
+            localStorage.setItem('constelar_history', JSON.stringify(history));
+            startBreathing();
+            try {
+                const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history }) });
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+                stopBreathing(); addMsg('ai', reply, true); reactToContent(reply);
+                history.push({ role: "assistant", content: reply });
+                localStorage.setItem('constelar_history', JSON.stringify(history));
+            } catch (err) { stopBreathing(); addMsg('ai', "...el campo calla temporalmente.", true); }
+        };
+
+        exportBtn.onclick = () => {
+            const sessionContent = history.filter(m => m.role === 'assistant' || m.role === 'ai').slice(-3)
+                .map(m => `<p>"${m.content.replace(/\[.*?\]/g, '').replace(/<br>/g, '')}"</p>`).join('');
+            healingContent.innerHTML = `<p class="mb-8 opacity-40 italic">Para el alma que busca su lugar...</p>${sessionContent}<p class="mt-12 opacity-40 italic">Todo está en orden ahora. Respira.</p>`;
+            healingModal.style.display = 'block';
+            gsap.from(".healing-letter", { opacity: 0, y: 50, duration: 1.5, ease: "power4.out" });
+        };
+
+        closeModal.onclick = () => { healingModal.style.display = 'none'; };
+        clearBtn.onclick = () => { if(confirm("¿Deseas liberar esta sesión?")) { localStorage.removeItem('constelar_history'); location.reload(); } };
     </script>
-    <div id="healing-modal">
-        <div class="healing-letter">
-            <h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b pb-8">Carta de Sanación</h2>
-            <div id="healing-content" class="text-xl leading-relaxed italic space-y-6">
-                <!-- El contenido se generará aquí -->
-            </div>
-            <div class="mt-16 pt-8 border-t flex justify-between items-center text-zinc-400">
-                <span class="text-xs uppercase tracking-widest opacity-40">El Campo ha hablado</span>
-                <button id="close-modal" class="text-xs uppercase tracking-widest hover:font-bold transition-all">Cerrar</button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
