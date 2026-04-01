@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL2TJ3JP7J"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FL2TJ3JP7J');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CONSTELAR | El Portal del Alma</title>
@@ -100,7 +109,7 @@
         </h1>
         <p class="font-garamond text-xl md:text-3xl italic text-white/30 mt-8 reveal">El orden es la base del amor.</p>
         <div class="mt-16 reveal">
-            <a href="/chat" class="btn-portal">Constelar</a>
+            <a href="/chat" onclick="gtag('event', 'iniciar_constelacion', {'ubicacion': 'hero'});" class="btn-portal">Constelar</a>
         </div>
     </section>
 
@@ -146,7 +155,7 @@
             <h2 class="font-cinzel text-[18vw] leading-none mb-10 tracking-tighter font-black opacity-[0.03] select-none">CONSTELAR</h2>
             <div class="reveal">
                 <p class="font-garamond text-2xl md:text-4xl italic text-ancestral/60 mb-12">¿Estás listo para mirar la verdad?</p>
-                <a href="/chat" class="btn-portal">Abrir Portal</a>
+                <a href="/chat" onclick="gtag('event', 'iniciar_constelacion', {'ubicacion': 'footer'});" class="btn-portal">Abrir Portal</a>
             </div>
         </div>
     </section>
@@ -157,6 +166,7 @@
         const overlay = document.getElementById('overlay');
 
         startBtn.onclick = () => {
+            gtag('event', 'conectar_portal');
             ambient.play();
             overlay.style.opacity = '0';
             setTimeout(() => overlay.style.display = 'none', 1000);

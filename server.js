@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const path = require('path');
 const cors = require('cors');
@@ -10,14 +11,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/')));
 
+// Endpoint para mantener la app despierta (Keep-alive)
+app.get('/ping', (req, res) => {
+  res.status(200).send('Corazón latiendo...');
+});
+
 // API para el chat
 app.post('/api/chat', async (req, res) => {
   try {
     const { messages } = req.body;
-    const GROQ_API_KEY = process.env.GROQ_API_KEY;
+    const GROQ_API_KEY = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
 
     if (!GROQ_API_KEY) {
-      return res.status(500).json({ error: "API Key no configurada" });
+      return res.status(500).json({ error: "API Key no configurada en el servidor" });
     }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
