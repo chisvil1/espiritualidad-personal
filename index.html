@@ -43,120 +43,46 @@
     <style>
         body { margin: 0; background: #010103; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-
-        .hero-title {
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            line-height: 0.9;
-            text-align: center;
-            background: linear-gradient(to bottom, #fff 20%, #F2E2B0 80%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 30px rgba(242, 226, 176, 0.15));
-        }
-
+        .hero-title { font-family: 'Cinzel', serif; font-weight: 900; line-height: 0.9; text-align: center; background: linear-gradient(to bottom, #fff 20%, #F2E2B0 80%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(242, 226, 176, 0.15)); }
         .section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; position: relative; z-index: 10; }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 2.5rem;
-            padding: 3rem;
-            width: 100%;
-            transition: all 0.5s ease;
-        }
+        .glass-panel { background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 2.5rem; padding: 3rem; width: 100%; transition: all 0.5s ease; }
         .glass-panel:hover { border-color: rgba(242, 226, 176, 0.2); background: rgba(255, 255, 255, 0.02); }
-
-        .btn-portal {
-            font-family: 'Cinzel', serif;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            padding: 1.2rem 3.5rem;
-            border-radius: 100px;
-            font-weight: 700;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            font-size: 0.8rem;
-            display: inline-block;
-        }
+        .btn-portal { font-family: 'Cinzel', serif; background: rgba(255, 255, 255, 0.05); color: #fff; padding: 1.2rem 3.5rem; border-radius: 100px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); font-size: 0.8rem; display: inline-block; }
         @media (min-width: 768px) { .btn-portal { padding: 1.8rem 6rem; font-size: 1rem; letter-spacing: 0.5em; } }
         .btn-portal:hover { background: #F2E2B0; color: #010103; transform: translateY(-5px); box-shadow: 0 10px 40px rgba(242, 226, 176, 0.2); }
-
         .reveal { opacity: 0; filter: blur(15px); transform: translateY(30px); }
         ::-webkit-scrollbar { width: 0px; }
-        
         .step-num { font-family: 'Cinzel', serif; font-size: 5rem; font-weight: 900; opacity: 0.05; position: absolute; top: -1rem; right: 2rem; }
     </style>
 </head>
 <body>
-
     <canvas id="galaxy-canvas"></canvas>
 
     <div id="overlay" class="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-center transition-opacity duration-1000 p-6 text-center">
         <h2 class="font-cinzel text-ancestral tracking-[0.5em] md:tracking-[1em] text-[10px] mb-10 uppercase">Entrando al Campo</h2>
         <div class="max-w-md w-full mb-10">
-            <input type="text" id="intencion-input" placeholder="¿Qué vienes a mirar hoy?" 
-            class="w-full bg-transparent border-b border-ancestral/20 py-4 text-center font-garamond italic text-xl md:text-2xl focus:outline-none focus:border-ancestral/60 transition-colors placeholder:text-white/10 text-ancestral/80">
+            <input type="text" id="intencion-input" placeholder="¿Qué vienes a mirar hoy?" class="w-full bg-transparent border-b border-ancestral/20 py-4 text-center font-garamond italic text-xl md:text-2xl focus:outline-none focus:border-ancestral/60 transition-colors placeholder:text-white/10 text-ancestral/80">
         </div>
         <button id="start-btn" class="btn-portal">Conectar</button>
     </div>
 
-    <audio id="ambient-drone" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
-
     <!-- HERO -->
     <section class="section">
-        <div class="mb-6 px-6 py-2 rounded-full border border-ancestral/10 bg-ancestral/5 text-[8px] md:text-[10px] uppercase tracking-[0.5em] text-ancestral/60 font-medium reveal">
-            Experiencia Sistémica Inmersiva
-        </div>
-        <h1 class="hero-title text-6xl md:text-9xl reveal">
-            ORDENA TU <span class="italic font-light">HISTORIA.</span><br>
-            SANA TU <span class="italic font-light">DESTINO.</span>
-        </h1>
-        <p class="font-garamond text-xl md:text-4xl italic text-white/40 mt-10 max-w-2xl text-center reveal leading-relaxed">
-            Un viaje sagrado hacia el origen de tu fuerza. Mira lo que fue para liberar lo que será.
-        </p>
-        <div class="mt-20 reveal">
-            <a href="/chat" onclick="gtag('event', 'iniciar_constelacion', {'ubicacion': 'hero'});" class="btn-portal">Comenzar</a>
-        </div>
-        <div class="absolute bottom-10 animate-bounce opacity-20 reveal">
-            <i data-lucide="chevron-down" class="w-6 h-6"></i>
-        </div>
+        <div class="mb-6 px-6 py-2 rounded-full border border-ancestral/10 bg-ancestral/5 text-[8px] md:text-[10px] uppercase tracking-[0.5em] text-ancestral/60 font-medium reveal">Experiencia Sistémica Inmersiva</div>
+        <h1 class="hero-title text-6xl md:text-9xl reveal">ORDENA TU <span class="italic font-light">HISTORIA.</span><br>SANA TU <span class="italic font-light">DESTINO.</span></h1>
+        <p class="font-garamond text-xl md:text-4xl italic text-white/40 mt-10 max-w-2xl text-center reveal leading-relaxed">Un viaje sagrado hacia el origen de tu fuerza. Mira lo que fue para liberar lo que será.</p>
+        <div class="mt-20 reveal"><a href="/chat" class="btn-portal">Comenzar</a></div>
+        <div class="absolute bottom-10 animate-bounce opacity-20 reveal"><i data-lucide="chevron-down" class="w-6 h-6"></i></div>
     </section>
 
     <!-- EL VIAJE -->
     <section class="section">
         <div class="max-w-6xl mx-auto w-full">
             <h2 class="font-cinzel text-3xl md:text-5xl text-center mb-24 tracking-[0.3em] text-ancestral uppercase reveal">El Proceso Sagrado</h2>
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
-                <div class="glass-panel reveal relative overflow-hidden group">
-                    <span class="step-num">01</span>
-                    <i data-lucide="sparkles" class="w-8 h-8 text-ancestral mb-8 opacity-40 group-hover:opacity-100 transition-opacity"></i>
-                    <h3 class="font-cinzel text-xl mb-6 text-white uppercase tracking-widest">Intención</h3>
-                    <p class="font-garamond text-lg opacity-50 italic leading-relaxed">
-                        Nombra aquello que pesa en tu alma. El campo comienza a moverse desde el primer aliento.
-                    </p>
-                </div>
-                <div class="glass-panel reveal relative overflow-hidden group">
-                    <span class="step-num">02</span>
-                    <i data-lucide="unfold-vertical" class="w-8 h-8 text-ancestral mb-8 opacity-40 group-hover:opacity-100 transition-opacity"></i>
-                    <h3 class="font-cinzel text-xl mb-6 text-white uppercase tracking-widest">Movimiento</h3>
-                    <p class="font-garamond text-lg opacity-50 italic leading-relaxed">
-                        Observa cómo tus ancestros se iluminan. Reconoce los lazos invisibles que dirigen tu vida.
-                    </p>
-                </div>
-                <div class="glass-panel reveal relative overflow-hidden group">
-                    <span class="step-num">03</span>
-                    <i data-lucide="scroll" class="w-8 h-8 text-ancestral mb-8 opacity-40 group-hover:opacity-100 transition-opacity"></i>
-                    <h3 class="font-cinzel text-xl mb-6 text-white uppercase tracking-widest">Sanación</h3>
-                    <p class="font-garamond text-lg opacity-50 italic leading-relaxed">
-                        Recibe la Carta de Sanación con las frases sagradas que devuelven el orden a tu linaje.
-                    </p>
-                </div>
+                <div class="glass-panel reveal relative overflow-hidden group"><span class="step-num">01</span><i data-lucide="sparkles" class="w-8 h-8 text-ancestral mb-8 opacity-40 group-hover:opacity-100 transition-opacity"></i><h3 class="font-cinzel text-xl mb-6 text-white uppercase tracking-widest">Intención</h3><p class="font-garamond text-lg opacity-50 italic leading-relaxed">Nombra aquello que pesa en tu alma. El campo comienza a moverse desde el primer aliento.</p></div>
+                <div class="glass-panel reveal relative overflow-hidden group"><span class="step-num">02</span><i data-lucide="unfold-vertical" class="w-8 h-8 text-ancestral mb-8 opacity-40 group-hover:opacity-100 transition-opacity"></i><h3 class="font-cinzel text-xl mb-6 text-white uppercase tracking-widest">Movimiento</h3><p class="font-garamond text-lg opacity-50 italic leading-relaxed">Observa cómo tus ancestros se iluminan. Reconoce los lazos invisibles que dirigen tu vida.</p></div>
+                <div class="glass-panel reveal relative overflow-hidden group"><span class="step-num">03</span><i data-lucide="scroll" class="w-8 h-8 text-ancestral mb-8 opacity-40 group-hover:opacity-100 transition-opacity"></i><h3 class="font-cinzel text-xl mb-6 text-white uppercase tracking-widest">Sanación</h3><p class="font-garamond text-lg opacity-50 italic leading-relaxed">Recibe la Carta de Sanación con las frases sagradas que devuelven el orden a tu linaje.</p></div>
             </div>
         </div>
     </section>
@@ -165,26 +91,14 @@
     <section class="section bg-void/30">
         <div class="max-w-4xl mx-auto w-full text-center">
             <i data-lucide="wind" class="w-12 h-12 text-ancestral/20 mx-auto mb-12"></i>
-            <h2 class="font-cinzel text-2xl md:text-4xl mb-12 tracking-[0.2em] reveal leading-relaxed">
-                NO ES SOLO UN CHAT.<br>ES UN <span class="text-ancestral">RITUAL DE TRANSFORMACIÓN.</span>
-            </h2>
+            <h2 class="font-cinzel text-2xl md:text-4xl mb-12 tracking-[0.2em] reveal leading-relaxed">NO ES SOLO UN CHAT.<br>ES UN <span class="text-ancestral">RITUAL DE TRANSFORMACIÓN.</span></h2>
             <div class="space-y-8 reveal">
-                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic">
-                    <i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Constelación Visual Dinámica
-                </div>
-                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic">
-                    <i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Mapa de Linaje Ancestral
-                </div>
-                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic">
-                    <i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Guía de Respiración Somática
-                </div>
-                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic">
-                    <i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Carta de Sanación Personalizada
-                </div>
+                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic"><i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Constelación Visual Dinámica</div>
+                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic"><i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Mapa de Linaje Ancestral</div>
+                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic"><i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Guía de Respiración Somática</div>
+                <div class="flex items-center gap-6 justify-center text-white/60 font-garamond text-xl italic"><i data-lucide="check" class="w-5 h-5 text-ancestral"></i> Carta de Sanación Personalizada</div>
             </div>
-            <div class="mt-20 reveal">
-                <a href="/chat" class="btn-portal">Abrir mi Sesión</a>
-            </div>
+            <div class="mt-20 reveal"><a href="/chat" class="btn-portal">Abrir mi Sesión</a></div>
         </div>
     </section>
 
@@ -201,19 +115,13 @@
 
     <script>
         lucide.createIcons();
-        const ambient = document.getElementById('ambient-drone');
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const intencionInput = document.getElementById('intencion-input');
 
         startBtn.onclick = () => {
             const intencion = intencionInput.value.trim();
-            if (intencion) {
-                localStorage.setItem('constelar_intencion', intencion);
-                gtag('event', 'definir_intencion', { 'intencion': intencion });
-            }
-            gtag('event', 'conectar_portal');
-            ambient.play();
+            if (intencion) localStorage.setItem('constelar_intencion', intencion);
             overlay.style.opacity = '0';
             setTimeout(() => overlay.style.display = 'none', 1000);
             initGalaxy();
@@ -224,28 +132,12 @@
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.set(0, 0, window.innerWidth < 768 ? 15 : 10);
-
-            const starTexture = (() => {
-                const c = document.createElement('canvas');
-                c.width = 64; c.height = 64;
-                const ctx = c.getContext('2d');
-                const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-                g.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                g.addColorStop(0.5, 'rgba(242, 226, 176, 0.2)');
-                g.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64);
-                return new THREE.CanvasTexture(c);
-            })();
-
             const count = window.innerWidth < 768 ? 15000 : 35000;
             const coreGeo = new THREE.BufferGeometry();
             const corePos = new Float32Array(count * 3);
-            const coreCol = new Float32Array(count * 3);
-
             for (let i = 0; i < count; i++) {
                 const i3 = i * 3;
                 const r = Math.random() * 15;
@@ -254,31 +146,14 @@
                 corePos[i3] = Math.cos(branch + spin) * r + (Math.random() - 0.5) * 3;
                 corePos[i3 + 1] = (Math.random() - 0.5) * 2;
                 corePos[i3 + 2] = Math.sin(branch + spin) * r + (Math.random() - 0.5) * 3;
-                const c = new THREE.Color(i % 3 === 0 ? '#4B2C5E' : (i % 3 === 1 ? '#2E3A59' : '#F2E2B0'));
-                coreCol[i3] = c.r; coreCol[i3+1] = c.g; coreCol[i3+2] = c.b;
             }
-
             coreGeo.setAttribute('position', new THREE.BufferAttribute(corePos, 3));
-            coreGeo.setAttribute('color', new THREE.BufferAttribute(coreCol, 3));
-            const core = new THREE.Points(coreGeo, new THREE.PointsMaterial({ size: 0.06, map: starTexture, transparent: true, blending: THREE.AdditiveBlending, vertexColors: true, depthWrite: false }));
+            const core = new THREE.Points(coreGeo, new THREE.PointsMaterial({ size: 0.02, color: 0x4B2C5E, transparent: true, opacity: 0.5 }));
             scene.add(core);
-
             gsap.registerPlugin(ScrollTrigger);
             gsap.to(".reveal", { opacity: 1, filter: "blur(0px)", y: 0, duration: 2, stagger: 0.3, ease: "power4.out" });
-            gsap.to(camera.position, { z: window.innerWidth < 768 ? 5 : -2, scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 3 } });
-
-            const animate = () => {
-                core.rotation.y += 0.001;
-                renderer.render(scene, camera);
-                requestAnimationFrame(animate);
-            };
+            const animate = () => { core.rotation.y += 0.001; renderer.render(scene, camera); requestAnimationFrame(animate); };
             animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
         }
     </script>
 </body>
