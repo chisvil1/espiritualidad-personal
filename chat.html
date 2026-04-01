@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL2TJ3JP7J"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -12,30 +11,21 @@
       }
       gtag('config', 'G-FL2TJ3JP7J');
     </script>
-    
-    <!-- PAYPAL SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AQelJ3XyRwCbr12uMJj-LwbfZokP4tYMlfclwNHWeCG7GxTiZE5UCg-_GdM4U06ug68Dy1MGPof8uN2Q&currency=USD"></script>
-    
-    <!-- Librería para PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CONSTELAR | Sesión Sistémica</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
     <style>
         body { margin: 0; background: #010103; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
         #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.8; }
+        #ar-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; display: none; }
         .chat-container { height: 100%; display: flex; flex-direction: column; width: 100%; max-width: 900px; margin: 0 auto; padding: 1rem; position: relative; z-index: 10; }
         .message-ai { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; line-height: 1.4; color: rgba(255, 255, 255, 0.9); font-style: italic; max-width: 100%; padding: 2rem 0; text-align: left; }
         @media (min-width: 768px) { .message-ai { font-size: 2.2rem; padding: 3rem 0; } }
@@ -43,39 +33,25 @@
         .hide-scroll { scrollbar-width: none; -ms-overflow-style: none; overflow-y: auto; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .input-pill { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 100px; padding: 0.4rem 0.8rem 0.4rem 1.5rem; width: 100%; }
-
         #breathing-guide { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; z-index: 5; display: none; pointer-events: none; }
         #breathing-circle { width: 100%; height: 100%; border: 1px solid rgba(242, 226, 176, 0.1); border-radius: 50%; background: radial-gradient(circle, rgba(242, 226, 176, 0.05) 0%, transparent 70%); }
         #breathing-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.4em; color: rgba(242, 226, 176, 0.4); font-weight: 300; }
-
         #ancestor-tree { position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 1.5rem; z-index: 5; pointer-events: none; }
         .ancestor-node { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 2s ease; position: relative; }
         .ancestor-node.active { background: #F2E2B0; box-shadow: 0 0 15px #F2E2B0; border-color: #F2E2B0; transform: scale(1.5); }
         .ancestor-label { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 8px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(242, 226, 176, 0); white-space: nowrap; transition: all 1s ease; }
         .ancestor-node.active .ancestor-label { color: rgba(242, 226, 176, 0.6); }
-
         #healing-modal, #pay-modal { display: none; position: fixed; inset: 0; background: rgba(1, 1, 3, 0.98); z-index: 100; padding: 2rem; overflow-y: auto; }
         .pay-card { max-width: 500px; margin: 6rem auto; background: #050507; color: #fff; padding: 4rem; border: 1px solid rgba(242, 226, 176, 0.1); border-radius: 2rem; position: relative; box-shadow: 0 0 100px rgba(0,0,0,1); }
-        .pay-card::before { content: ''; position: absolute; inset: 0.5rem; border: 1px solid rgba(242, 226, 176, 0.03); border-radius: 1.5rem; pointer-events: none; }
-
         .healing-letter { max-width: 600px; margin: 4rem auto; background: #fdfaf3; color: #2c2c2c; padding: 5rem; font-family: 'Cormorant Garamond', serif; box-shadow: 0 0 50px rgba(0,0,0,0.5); position: relative; }
-        .healing-letter::before { content: ''; position: absolute; inset: 1.5rem; border: 1px solid rgba(0,0,0,0.05); pointer-events: none; }
-        .prose p { margin-bottom: 1.2rem; }
-        
         .btn-gold { font-family: 'Cinzel', serif; background: #F2E2B0; color: #010103; padding: 1rem 2rem; border-radius: 100px; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; transition: all 0.5s ease; }
-        .btn-gold:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(242, 226, 176, 0.3); }
-        
         .mic-active { color: #F2E2B0; filter: drop-shadow(0 0 10px #F2E2B0); }
     </style>
 </head>
 <body>
+    <video id="ar-video" autoplay playsinline></video>
     <canvas id="galaxy-canvas"></canvas>
-
-    <div id="breathing-guide">
-        <div id="breathing-circle"></div>
-        <div id="breathing-text">Inhala</div>
-    </div>
-
+    <div id="breathing-guide"><div id="breathing-circle"></div><div id="breathing-text">Inhala</div></div>
     <div id="ancestor-tree">
         <div class="ancestor-node" id="node-padre"><span class="ancestor-label">Linaje Paterno</span></div>
         <div class="ancestor-node" id="node-madre"><span class="ancestor-label">Linaje Materno</span></div>
@@ -83,15 +59,11 @@
         <div class="ancestor-node" id="node-hermanos"><span class="ancestor-label">Fraternidad</span></div>
         <div class="ancestor-node" id="node-hijos"><span class="ancestor-label">Descendencia</span></div>
     </div>
-
     <header class="fixed top-0 left-0 w-full p-6 md:p-10 z-50 flex justify-between items-center pointer-events-none">
         <a href="/" class="pointer-events-auto text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-white/20 hover:text-white flex items-center gap-3"><i data-lucide="arrow-left" class="w-3 h-3"></i> Salir</a>
-        <div id="voice-mode-status" class="flex items-center gap-2 opacity-0 transition-opacity duration-1000">
-            <div class="w-1 h-1 bg-ancestral rounded-full animate-pulse"></div>
-            <span class="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-ancestral/60">Escuchando...</span>
-        </div>
+        <button id="ar-btn" class="pointer-events-auto text-[8px] uppercase tracking-[0.4em] text-white/20 hover:text-ancestral flex items-center gap-3"><i data-lucide="camera" class="w-3 h-3"></i> Portal AR</button>
+        <div id="voice-mode-status" class="flex items-center gap-2 opacity-0 transition-opacity duration-1000"><div class="w-1 h-1 bg-ancestral rounded-full animate-pulse"></div><span class="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-ancestral/60">Escuchando...</span></div>
     </header>
-
     <div class="chat-container">
         <div id="chat-window" class="flex-1 hide-scroll pt-24 pb-32 space-y-12"></div>
         <div class="fixed bottom-6 left-0 w-full px-4 z-50">
@@ -102,42 +74,13 @@
                 </div>
                 <div class="input-pill flex items-center gap-4">
                     <button id="mic-btn" class="w-10 h-10 flex items-center justify-center text-white/20"><i data-lucide="mic" id="mic-icon" class="w-4 h-4"></i></button>
-                    <form id="chat-form" class="flex-1">
-                        <input type="text" id="user-input" placeholder="Escribe o habla..." class="w-full bg-transparent py-4 text-base md:text-lg font-light focus:outline-none placeholder:text-white/5" autocomplete="off">
-                    </form>
+                    <form id="chat-form" class="flex-1"><input type="text" id="user-input" placeholder="Escribe o habla..." class="w-full bg-transparent py-4 text-base md:text-lg font-light focus:outline-none placeholder:text-white/5" autocomplete="off"></form>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- MODAL DE PAGO -->
-    <div id="pay-modal">
-        <div class="pay-card text-center">
-            <h2 class="font-cinzel text-ancestral text-xl uppercase tracking-[0.4em] mb-8">Intercambio de Energía</h2>
-            <p class="font-garamond italic text-xl mb-12 text-white/60">Para profundizar en tu sanación y recibir tu Carta Ancestral, se requiere un intercambio sagrado.</p>
-            <div id="paypal-button-container" class="mb-8"></div>
-            <button onclick="document.getElementById('pay-modal').style.display='none'" class="text-[8px] uppercase tracking-widest text-white/20 hover:text-white transition-colors">Cerrar</button>
-        </div>
-    </div>
-
-    <!-- MODAL DE CARTA -->
-    <div id="healing-modal">
-        <div id="pdf-area">
-            <div class="healing-letter">
-                <h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b border-black/10 pb-8">Carta de Sanación</h2>
-                <div id="healing-content" class="text-xl leading-relaxed italic space-y-6 text-zinc-800"></div>
-                <div class="mt-20 pt-8 border-t border-black/5 flex justify-between items-center text-zinc-400">
-                    <span class="text-[10px] uppercase tracking-widest">Portal Constelar • 2026</span>
-                    <span class="text-[10px] uppercase tracking-widest italic">Todo está en orden</span>
-                </div>
-            </div>
-        </div>
-        <div class="max-w-[600px] mx-auto mt-8 flex justify-between items-center px-4">
-            <button id="download-pdf" class="btn-gold">Descargar PDF</button>
-            <button id="close-modal" class="text-xs uppercase tracking-widest text-white/40 hover:text-white">Cerrar</button>
-        </div>
-    </div>
-
+    <div id="pay-modal"><div class="pay-card text-center"><h2 class="font-cinzel text-ancestral text-xl uppercase tracking-[0.4em] mb-8">Intercambio de Energía</h2><p class="font-garamond italic text-xl mb-12 text-white/60">Para profundizar en tu sanación y recibir tu Carta Ancestral, se requiere un intercambio sagrado.</p><div id="paypal-button-container" class="mb-8"></div><button onclick="document.getElementById('pay-modal').style.display='none'" class="text-[8px] uppercase tracking-widest text-white/20 hover:text-white transition-colors">Cerrar</button></div></div>
+    <div id="healing-modal"><div id="pdf-area"><div class="healing-letter"><h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b border-black/10 pb-8">Carta de Sanación</h2><div id="healing-content" class="text-xl leading-relaxed italic space-y-6 text-zinc-800"></div><div class="mt-20 pt-8 border-t border-black/5 flex justify-between items-center text-zinc-400"><span class="text-[10px] uppercase tracking-widest">Portal Constelar • 2026</span><span class="text-[10px] uppercase tracking-widest italic">Todo está en orden</span></div></div></div><div class="max-w-[600px] mx-auto mt-8 flex justify-between items-center px-4"><button id="download-pdf" class="btn-gold">Descargar PDF</button><button id="close-modal" class="text-xs uppercase tracking-widest text-white/40 hover:text-white">Cerrar</button></div></div>
     <script>
         lucide.createIcons();
         const canvas = document.querySelector('#galaxy-canvas');
@@ -173,24 +116,46 @@
         }
         animate();
 
+        // --- AR PORTAL ---
+        const arBtn = document.getElementById('ar-btn');
+        const arVideo = document.getElementById('ar-video');
+        let arActive = false;
+        arBtn.onclick = async () => {
+            arActive = !arActive;
+            if (arActive) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    arVideo.srcObject = stream;
+                    arVideo.style.display = 'block';
+                    stars.material.opacity = 0.1;
+                    renderer.setClearColor(0x000000, 0);
+                } catch (e) { alert("Tu dispositivo no permite el acceso a la cámara para AR."); arActive = false; }
+            } else {
+                const tracks = arVideo.srcObject?.getTracks();
+                if (tracks) tracks.forEach(t => t.stop());
+                arVideo.style.display = 'none';
+                stars.material.opacity = 0.3;
+            }
+        };
+
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const userInput = document.getElementById('user-input');
         const payModal = document.getElementById('pay-modal');
         const micBtn = document.getElementById('mic-btn');
-        const micIcon = document.getElementById('mic-icon');
         const voiceStatus = document.getElementById('voice-mode-status');
         
         let isPaid = localStorage.getItem('is_paid') === 'true';
         let msgCount = parseInt(localStorage.getItem('msg_count')) || 0;
+        let lineageMap = JSON.parse(localStorage.getItem('lineage_map')) || {};
         let isVoiceMode = false;
 
         const intencionUsuario = localStorage.getItem('constelar_intencion');
         let history = JSON.parse(localStorage.getItem('constelar_history')) || [
-            { role: "system", content: `Eres una terapeuta sistémica maternal. Tu voz es suave y profunda. 
+            { role: "system", content: `Eres una terapeuta sistémica maternal. Tu voz es fluida y clara. 
             El usuario llega hoy con la intención: "${intencionUsuario || 'Sanación general'}".
-            Incluye siempre al final de cada respuesta un tag de emoción: [PAZ], [DOLOR], [ORDEN], [AMOR], [LINAJE]. 
-            Respuestas breves (2-3 frases). Una pregunta por turno.` }
+            Incluye siempre un tag de emoción: [PAZ], [DOLOR], [ORDEN], [AMOR], [LINAJE]. 
+            Respuestas breves. Una pregunta por turno.` }
         ];
 
         if (history.length > 1) { history.forEach(m => { if (m.role !== 'system') addMsg(m.role, m.content, false); }); } 
@@ -232,10 +197,8 @@
             const cleanText = text.replace(/\[.*?\]/g, '').replace(/[*_#]/g, '');
             const utterance = new SpeechSynthesisUtterance(cleanText);
             const voices = window.speechSynthesis.getVoices();
-            // Buscar voz femenina y fluida (estilo Siri/Alexa)
-            utterance.voice = voices.find(v => v.lang.includes('es') && (v.name.includes('Google') || v.name.includes('Lucia') || v.name.includes('Helena'))) || voices[0];
-            utterance.rate = 1.1; // Más fluido
-            utterance.pitch = 1.0;
+            utterance.voice = voices.find(v => v.lang.includes('es') && (v.name.includes('Google') || v.name.includes('Lucia'))) || voices[0];
+            utterance.rate = 1.1; 
             utterance.onstart = () => { if (recognition) recognition.stop(); voiceStatus.style.opacity = '0'; };
             utterance.onend = () => { if (isVoiceMode && recognition) { try { recognition.start(); voiceStatus.style.opacity = '1'; } catch(e){} } };
             window.speechSynthesis.speak(utterance);
@@ -244,29 +207,14 @@
         const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;
         if (Speech) {
-            recognition = new Speech();
-            recognition.lang = 'es-ES';
-            recognition.continuous = true;
-            recognition.onresult = (e) => {
-                userInput.value = e.results[e.results.length - 1][0].transcript;
-                chatForm.dispatchEvent(new Event('submit'));
-            };
+            recognition = new Speech(); recognition.lang = 'es-ES'; recognition.continuous = true;
+            recognition.onresult = (e) => { userInput.value = e.results[e.results.length - 1][0].transcript; chatForm.dispatchEvent(new Event('submit')); };
         }
 
         micBtn.onclick = () => {
             isVoiceMode = !isVoiceMode;
-            if (isVoiceMode) {
-                gtag('event', 'uso_microfono', {'estado': 'activado'});
-                try { recognition.start(); } catch(e) {}
-                micIcon.classList.add('mic-active');
-                voiceStatus.style.opacity = '1';
-            } else {
-                gtag('event', 'uso_microfono', {'estado': 'desactivado'});
-                recognition.stop();
-                window.speechSynthesis.cancel();
-                micIcon.classList.remove('mic-active');
-                voiceStatus.style.opacity = '0';
-            }
+            if (isVoiceMode) { try { recognition.start(); } catch(e) {} document.getElementById('mic-icon').classList.add('mic-active'); voiceStatus.style.opacity = '1'; } 
+            else { recognition.stop(); window.speechSynthesis.cancel(); document.getElementById('mic-icon').classList.remove('mic-active'); voiceStatus.style.opacity = '0'; }
         };
 
         function addMsg(role, content, animate = true) {
@@ -294,7 +242,11 @@
             localStorage.setItem('constelar_history', JSON.stringify(history));
             startBreathing();
             try {
-                const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history }) });
+                const res = await fetch("/api/chat", { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ messages: history, lineage_map: lineageMap }) 
+                });
                 const data = await res.json();
                 const reply = data.choices[0].message.content;
                 stopBreathing(); addMsg('ai', reply, true); reactToContent(reply);
@@ -306,12 +258,17 @@
 
         function reactToContent(text) {
             const lowText = text.toLowerCase();
-            if (lowText.includes('padre') || lowText.includes('papá')) { pulseOrb(orbs.father, 0x4B2C5E); document.getElementById('node-padre').classList.add('active'); }
-            if (lowText.includes('madre') || lowText.includes('mamá')) { pulseOrb(orbs.mother, 0xF2E2B0); document.getElementById('node-madre').classList.add('active'); }
-            if (lowText.includes('abuelo') || lowText.includes('abuela')) { document.getElementById('node-abuelos').classList.add('active'); }
-            if (lowText.includes('hermano') || lowText.includes('hermana')) { document.getElementById('node-hermanos').classList.add('active'); }
-            if (lowText.includes('hijo') || lowText.includes('hija')) { document.getElementById('node-hijos').classList.add('active'); }
-            if (lowText.includes('tú') || lowText.includes('yo') || lowText.includes('mí')) { pulseOrb(orbs.self, 0xffffff); }
+            const nodes = { 'padre': 'padre', 'papá': 'padre', 'madre': 'madre', 'mamá': 'madre', 'abuelo': 'abuelos', 'abuela': 'abuelos', 'hermano': 'hermanos', 'hermana': 'hermanos', 'hijo': 'hijos' };
+            for (let key in nodes) {
+                if (lowText.includes(key)) {
+                    document.getElementById(`node-${nodes[key]}`).classList.add('active');
+                    lineageMap[nodes[key]] = true;
+                    localStorage.setItem('lineage_map', JSON.stringify(lineageMap));
+                    if (nodes[key] === 'padre') pulseOrb(orbs.father, 0x4B2C5E);
+                    if (nodes[key] === 'madre') pulseOrb(orbs.mother, 0xF2E2B0);
+                }
+            }
+            if (lowText.includes('tú') || lowText.includes('yo')) pulseOrb(orbs.self, 0xffffff);
         }
 
         function pulseOrb(orb, color) {
@@ -320,37 +277,31 @@
         }
 
         paypal.Buttons({
-            style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'paypal' },
+            style: { layout: 'vertical', color: 'gold', shape: 'pill' },
             createOrder: (data, actions) => { return actions.order.create({ purchase_units: [{ amount: { value: '9.99' } }] }); },
             onApprove: (data, actions) => {
                 return actions.order.capture().then(details => {
-                    alert('Gracias por tu intercambio, ' + details.payer.name.given_name + '. El campo se expande para ti.');
                     isPaid = true; localStorage.setItem('is_paid', 'true');
-                    payModal.style.display = 'none';
+                    document.getElementById('pay-modal').style.display = 'none';
                 });
             }
         }).render('#paypal-button-container');
 
         const exportBtn = document.getElementById('export-btn');
-        const healingModal = document.getElementById('healing-modal');
-        const healingContent = document.getElementById('healing-content');
-        
         exportBtn.onclick = () => {
-            if (!isPaid) { payModal.style.display = 'block'; return; }
+            if (!isPaid) { document.getElementById('pay-modal').style.display = 'block'; return; }
             const sessionContent = history.filter(m => m.role === 'assistant' || m.role === 'ai').slice(-5)
                 .map(m => `<p>"${m.content.replace(/\[.*?\]/g, '').replace(/<br>/g, '')}"</p>`).join('');
-            healingContent.innerHTML = `<p class="mb-8 opacity-40 italic text-zinc-500">Para el alma que busca su lugar...</p>${sessionContent}<p class="mt-12 opacity-40 italic text-zinc-500">Todo está en orden ahora. Respira.</p>`;
-            healingModal.style.display = 'block';
+            document.getElementById('healing-content').innerHTML = `<p class="mb-8 opacity-40 italic">Para el alma que busca su lugar...</p>${sessionContent}<p class="mt-12 opacity-40 italic">Todo está en orden.</p>`;
+            document.getElementById('healing-modal').style.display = 'block';
         };
 
         document.getElementById('download-pdf').onclick = () => {
-            const element = document.getElementById('pdf-area');
-            const opt = { margin: 1, filename: 'Carta_Sanacion_Constelar.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set({ margin: 1, filename: 'Carta_Sanacion.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter' } })
+                .from(document.getElementById('pdf-area')).save();
         };
-
-        document.getElementById('close-modal').onclick = () => { healingModal.style.display = 'none'; };
-        document.getElementById('clear-btn').onclick = () => { if(confirm("¿Deseas liberar esta sesión?")) { localStorage.removeItem('constelar_history'); localStorage.removeItem('msg_count'); location.reload(); } };
+        document.getElementById('close-modal').onclick = () => { document.getElementById('healing-modal').style.display = 'none'; };
+        document.getElementById('clear-btn').onclick = () => { if(confirm("¿Deseas liberar esta sesión?")) { localStorage.clear(); location.reload(); } };
     </script>
 </body>
 </html>

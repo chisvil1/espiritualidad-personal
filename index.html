@@ -102,6 +102,23 @@
         </div>
     </section>
 
+    <!-- INCONSCIENTE COLECTIVO -->
+    <section class="section">
+        <div class="glass-panel max-w-2xl text-center reveal">
+            <h3 class="font-cinzel text-ancestral text-[10px] tracking-[0.5em] mb-12 uppercase">Inconsciente Colectivo</h3>
+            <div class="grid grid-cols-2 gap-12">
+                <div>
+                    <div id="active-souls" class="text-4xl md:text-6xl font-cinzel mb-4">--</div>
+                    <div class="text-[8px] uppercase tracking-widest opacity-40 text-white">Almas en Conexión</div>
+                </div>
+                <div>
+                    <div id="total-healed" class="text-4xl md:text-6xl font-cinzel mb-4 text-ancestral">--</div>
+                    <div class="text-[8px] uppercase tracking-widest opacity-40 text-white">Linajes Ordenados</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <section class="section pb-20">
         <div class="text-center p-6">
@@ -115,6 +132,19 @@
 
     <script>
         lucide.createIcons();
+
+        // --- DATA COLECTIVA ---
+        async function fetchCollective() {
+            try {
+                const res = await fetch('/api/collective-soul');
+                const data = await res.json();
+                document.getElementById('active-souls').innerText = data.active_now;
+                document.getElementById('total-healed').innerText = data.total_healed.toLocaleString();
+            } catch(e) {}
+        }
+        fetchCollective();
+        setInterval(fetchCollective, 30000);
+
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const intencionInput = document.getElementById('intencion-input');
