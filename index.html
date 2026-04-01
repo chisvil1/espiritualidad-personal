@@ -101,7 +101,13 @@
     <canvas id="galaxy-canvas"></canvas>
 
     <div id="overlay" class="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-center transition-opacity duration-1000 p-6 text-center">
-        <h2 class="font-cinzel text-ancestral tracking-[0.5em] md:tracking-[1em] text-[10px] mb-10">ENTRANDO AL CAMPO</h2>
+        <h2 class="font-cinzel text-ancestral tracking-[0.5em] md:tracking-[1em] text-[10px] mb-10 uppercase">Entrando al Campo</h2>
+        
+        <div class="max-w-md w-full mb-10">
+            <input type="text" id="intencion-input" placeholder="¿Qué vienes a mirar hoy?" 
+            class="w-full bg-transparent border-b border-ancestral/20 py-4 text-center font-garamond italic text-xl md:text-2xl focus:outline-none focus:border-ancestral/60 transition-colors placeholder:text-white/10 text-ancestral/80">
+        </div>
+
         <button id="start-btn" class="btn-portal">Conectar</button>
     </div>
 
@@ -172,8 +178,15 @@
         const ambient = document.getElementById('ambient-drone');
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
+        const intencionInput = document.getElementById('intencion-input');
 
         startBtn.onclick = () => {
+            const intencion = intencionInput.value.trim();
+            if (intencion) {
+                localStorage.setItem('constelar_intencion', intencion);
+                gtag('event', 'definir_intencion', { 'intencion': intencion });
+            }
+            
             gtag('event', 'conectar_portal');
             ambient.play();
             overlay.style.opacity = '0';

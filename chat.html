@@ -81,6 +81,34 @@
         @keyframes pulse-glow { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.2; } }
 
         .prose p { margin-bottom: 1.2rem; }
+
+        /* Estilos de la Carta de Sanación */
+        #healing-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(1, 1, 3, 0.95);
+            z-index: 100;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .healing-letter {
+            max-width: 600px;
+            margin: 4rem auto;
+            background: #fdfaf3;
+            color: #2c2c2c;
+            padding: 4rem;
+            font-family: 'Cormorant Garamond', serif;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .healing-letter::before {
+            content: '';
+            position: absolute;
+            inset: 1rem;
+            border: 1px solid rgba(0,0,0,0.05);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -208,9 +236,12 @@
         const voiceStatus = document.getElementById('voice-mode-status');
         const clearBtn = document.getElementById('clear-btn');
 
-        let isVoiceMode = false;
+        const intencionUsuario = localStorage.getItem('constelar_intencion');
         let history = JSON.parse(localStorage.getItem('constelar_history')) || [
-            { role: "system", content: "Eres una terapeuta sistémica maternal. Respuestas breves (2-3 frases). Una pregunta por turno. Voz maternal." }
+            { role: "system", content: `Eres una terapeuta sistémica maternal. Tu voz es suave y profunda. 
+            El usuario llega hoy con la siguiente intención: "${intencionUsuario || 'Sanación general'}".
+            Incluye siempre al final de cada respuesta un tag de emoción oculto entre corchetes, elige uno de estos: [PAZ], [DOLOR], [ORDEN], [AMOR], [LINAJE]. 
+            Respuestas breves (2-3 frases). Una pregunta por turno.` }
         ];
 
         // Cargar historial visualmente
@@ -219,7 +250,10 @@
                 if (m.role !== 'system') addMsg(m.role, m.content, false);
             });
         } else {
-            addMsg('ai', "Respira. Siente tu presencia. <br><br> ¿Qué sistema deseas mirar hoy?", true);
+            const saludo = intencionUsuario 
+                ? `Respira. Siente tu presencia. El campo se abre para mirar eso que traes: "${intencionUsuario}". <br><br> ¿Qué es lo primero que sientes al traer esto aquí?`
+                : "Respira. Siente tu presencia. <br><br> ¿Qué sistema deseas mirar hoy?";
+            addMsg('ai', saludo, true);
         }
 
         clearBtn.onclick = () => {
@@ -271,52 +305,57 @@
         }
 
         const exportBtn = document.getElementById('export-btn');
-
-        chatForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const val = userInput.value.trim();
-            if (!val) return;
-            userInput.value = '';
-            addMsg('user', val, true);
-            reactToContent(val); // Reaccionar al input del usuario
-            history.push({ role: "user", content: val });
-            localStorage.setItem('constelar_history', JSON.stringify(history));
-
-            // Indicador de carga
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = "flex justify-start opacity-0 italic text-ancestral/20 font-garamond text-xl py-4";
-            loadingDiv.innerText = "...el campo se ordena...";
-            chatWindow.appendChild(loadingDiv);
-            gsap.to(loadingDiv, { opacity: 1, duration: 1 });
-
-            try {
-                const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history }) });
-                const data = await res.json();
-                const reply = data.choices[0].message.content;
-                chatWindow.removeChild(loadingDiv);
-                addMsg('ai', reply, true);
-                reactToContent(reply); // Reaccionar a la respuesta de la IA
-                history.push({ role: "assistant", content: reply });
-                localStorage.setItem('constelar_history', JSON.stringify(history));
-                speak(reply);
-            } catch (err) { 
-                chatWindow.removeChild(loadingDiv);
-                addMsg('ai', "...el campo calla temporalmente.", true); 
-            }
-        };
+        const healingModal = document.getElementById('healing-modal');
+        const healingContent = document.getElementById('healing-content');
+        const closeModal = document.getElementById('close-modal');
 
         exportBtn.onclick = () => {
-            gtag('event', 'exportar_sanacion');
-            const content = history.filter(m => m.role !== 'system').map(m => `${m.role === 'user' ? 'YO' : 'CONSTELAR'}: ${m.content}\n\n`).join('');
-            const blob = new Blob([`SESIÓN DE SANACIÓN - CONSTELAR\n\n${content}`], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sanacion_${new Date().getTime()}.txt`;
-            a.click();
+            gtag('event', 'exportar_sanacion_visual');
+            const sessionContent = history
+                .filter(m => m.role === 'assistant' || m.role === 'ai')
+                .slice(-3) // Solo las últimas 3 enseñanzas para que sea una carta breve
+                .map(m => `<p>"${m.content.replace(/\[.*?\]/g, '').replace(/<br>/g, '')}"</p>`)
+                .join('');
+            
+            healingContent.innerHTML = `
+                <p class="mb-8 opacity-40">Para el alma que busca su lugar...</p>
+                ${sessionContent}
+                <p class="mt-12 opacity-40">Todo está en orden ahora. Respira.</p>
+            `;
+            healingModal.style.display = 'block';
+            gsap.from(".healing-letter", { opacity: 0, y: 50, duration: 1.5, ease: "power4.out" });
         };
 
+        closeModal.onclick = () => {
+            gsap.to(".healing-letter", { opacity: 0, y: 50, duration: 0.8, onComplete: () => {
+                healingModal.style.display = 'none';
+            }});
+        };
+
+        function updateAtmosphere(emotion) {
+            let color;
+            switch(emotion) {
+                case 'PAZ': color = 0xF2E2B0; break;
+                case 'DOLOR': color = 0x4B2C5E; break;
+                case 'ORDEN': color = 0xffffff; break;
+                case 'AMOR': color = 0xff5555; break;
+                case 'LINAJE': color = 0x2E3A59; break;
+                default: color = 0x4B2C5E;
+            }
+            gsap.to(stars.material.color, { r: new THREE.Color(color).r, g: new THREE.Color(color).g, b: new THREE.Color(color).b, duration: 3 });
+            gsap.to(stars.material, { opacity: 0.6, duration: 1, yoyo: true, repeat: 1 });
+        }
+
         function addMsg(role, content, animate = true) {
+            // Extraer y limpiar tags de emoción
+            let emotion = 'ORDEN';
+            const emotionMatch = content.match(/\[(PAZ|DOLOR|ORDEN|AMOR|LINAJE)\]/);
+            if (emotionMatch) {
+                emotion = emotionMatch[1];
+                content = content.replace(/\[(PAZ|DOLOR|ORDEN|AMOR|LINAJE)\]/g, '').trim();
+                if (role !== 'user') updateAtmosphere(emotion);
+            }
+
             const div = document.createElement('div');
             div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} ${animate ? 'opacity-0' : 'opacity-100'}`;
             const bubble = document.createElement('div');
@@ -328,5 +367,17 @@
             chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
     </script>
+    <div id="healing-modal">
+        <div class="healing-letter">
+            <h2 class="text-center text-2xl uppercase tracking-[0.3em] mb-12 border-b pb-8">Carta de Sanación</h2>
+            <div id="healing-content" class="text-xl leading-relaxed italic space-y-6">
+                <!-- El contenido se generará aquí -->
+            </div>
+            <div class="mt-16 pt-8 border-t flex justify-between items-center text-zinc-400">
+                <span class="text-xs uppercase tracking-widest opacity-40">El Campo ha hablado</span>
+                <button id="close-modal" class="text-xs uppercase tracking-widest hover:font-bold transition-all">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
